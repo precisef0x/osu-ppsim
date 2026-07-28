@@ -1,0 +1,30 @@
+# Оракул: клоны C#-исходников ppy для генерации эталонных фикстур.
+# Дев-инструмент, в библиотеку не входит. Версии зафиксированы в oracle/PINNED.md.
+/oracle/osu/
+/oracle/osu-tools/
+
+# Артефакты сборки C#. Тянут за собой нативные библиотеки под все платформы —
+# сотни мегабайт. Исходники дамп-хука (oracle/dump/*.cs, *.csproj) в git идут.
+bin/
+obj/
+
+# Фикстуры оракула: генерируются `python3 tools/oracle.py fixtures`.
+/fixtures/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# macOS
+.DS_Store
+
+# Аномалии сплошного прогона корпуса (tools/corpus_scan.py).
+anomalies.jsonl

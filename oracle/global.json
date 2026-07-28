@@ -1,0 +1,8 @@
+{
+  "//": "Пинит SDK 8 для всего, что запускается под oracle/. Копия ограничения из ppy/osu: у osu-tools своего global.json нет, и без этого файла dotnet выбрал бы установленный 10.0.302.",
+  "sdk": {
+    "version": "8.0.100",
+    "rollForward": "latestFeature",
+    "allowPrerelease": false
+  }
+}

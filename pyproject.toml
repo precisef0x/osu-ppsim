@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "osu-ppsim"
+version = "0.2.0"
+description = "Расчёт pp за FC-прохождение карты osu!standard на заданной accuracy"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Onee Chan" }]
+keywords = ["osu", "pp", "performance-points", "star-rating", "difficulty"]
+
+# Внешних зависимостей нет и не планируется: расчёт целиком на стандартной
+# библиотеке, чтобы библиотека ставилась обычным pip install куда угодно.
+dependencies = []
+
+classifiers = [
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
+  "Topic :: Games/Entertainment",
+  "License :: OSI Approved :: MIT License",
+]
+
+# ВНИМАНИЕ: всё, что относится к самому проекту, должно стоять ВЫШЕ первого
+# заголовка [project.xxx] — иначе оно молча попадёт в чужую таблицу.
+
+[project.optional-dependencies]
+dev = ["ruff"]
+
+[project.urls]
+Source = "https://github.com/precisef0x/osu-ppsim"
+Issues = "https://github.com/precisef0x/osu-ppsim/issues"
+Changelog = "https://github.com/precisef0x/osu-ppsim/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["osu_ppsim"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+# Порт намеренно повторяет структуру и имена C#-оригинала, поэтому длинные
+# выражения и «неидиоматичные» циклы здесь осознанны.
+ignore = ["E501", "SIM108"]

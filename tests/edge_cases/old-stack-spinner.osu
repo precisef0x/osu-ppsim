@@ -1,0 +1,25 @@
+osu file format v5
+
+[General]
+Mode: 0
+StackLeniency: 0.7
+
+[Difficulty]
+HPDrainRate:5
+CircleSize:4
+OverallDifficulty:7
+ApproachRate:9
+SliderMultiplier:1.4
+SliderTickRate:1
+
+[TimingPoints]
+0,500,4,2,0,100,1,0
+
+[HitObjects]
+50,50,500,1,0
+100,100,1000,2,0,L|256:192,1,180
+256,192,1400,12,0,1900
+301,192,2100,1,0
+306,202,2300,1,0
+296,212,2500,1,0
+150,300,2700,1,0

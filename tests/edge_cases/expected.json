@@ -1,0 +1,5047 @@
+{
+  "//": "Снято с самого порта: гейт на регрессию, не на правильность. Пересъёмка: python3 tests/test_snapshot.py --update",
+  "calculator_version": 20260706,
+  "precision": 1e-12,
+  "cases": [
+    {
+      "beatmap": "acc-rounding",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.9777284248620326,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 34.38186954826041
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.9777284248620326,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 34.38186954826041
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 1.9777284248620326,
+      "max_combo": 21,
+      "actual_accuracy": 0.9682539682539683,
+      "pp": 19.15043039813963
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 1.9777284248620326,
+      "max_combo": 21,
+      "actual_accuracy": 0.9682539682539683,
+      "pp": 19.15043039813963
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 2.5366169563598753,
+      "max_combo": 21,
+      "actual_accuracy": 0.9365079365079365,
+      "pp": 25.317562087699667
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 2.5366169563598753,
+      "max_combo": 21,
+      "actual_accuracy": 0.9365079365079365,
+      "pp": 25.317562087699667
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 2.1161232046922005,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 72.90933800605006
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 2.1161232046922005,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 72.90933800605006
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.5704259697187635,
+      "max_combo": 21,
+      "actual_accuracy": 0.9682539682539683,
+      "pp": 3.940887991809882
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.5704259697187635,
+      "max_combo": 21,
+      "actual_accuracy": 0.9682539682539683,
+      "pp": 3.940887991809882
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 2.0058191221130532,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 34.67036030313674
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 2.0058191221130532,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 34.67036030313674
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 2.482038848838132,
+      "max_combo": 21,
+      "actual_accuracy": 0.9682539682539683,
+      "pp": 39.353394498179014
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 2.482038848838132,
+      "max_combo": 21,
+      "actual_accuracy": 0.9682539682539683,
+      "pp": 39.353394498179014
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.8321091294512788,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 18.586871152791787
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.8321091294512788,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 18.586871152791787
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.9777284248620326,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 34.38186954826041
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.9777284248620326,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 34.38186954826041
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 2.5366169563598753,
+      "max_combo": 21,
+      "actual_accuracy": 0.9365079365079365,
+      "pp": 25.317562087699667
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 2.5366169563598753,
+      "max_combo": 21,
+      "actual_accuracy": 0.9365079365079365,
+      "pp": 25.317562087699667
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.5704259697187635,
+      "max_combo": 21,
+      "actual_accuracy": 0.9682539682539683,
+      "pp": 3.940887991809882
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.5704259697187635,
+      "max_combo": 21,
+      "actual_accuracy": 0.9682539682539683,
+      "pp": 3.940887991809882
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 2.0058191221130532,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 34.67036030313674
+    },
+    {
+      "beatmap": "acc-rounding",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 2.0058191221130532,
+      "max_combo": 21,
+      "actual_accuracy": 1.0,
+      "pp": 34.67036030313674
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.5059041710028667,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.810386600906533
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.5059041710028667,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.810386600906533
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 1.5059041710028667,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.810386600906533
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 1.5059041710028667,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.810386600906533
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 1.8250472091639327,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 8.333644905520005
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 1.8250472091639327,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 8.333644905520005
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.5319383895354906,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 49.94848010478457
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.5319383895354906,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 49.94848010478457
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.3136848427145347,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 2.6874681103413995
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.3136848427145347,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 2.6874681103413995
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.613599625420108,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 23.46679150861575
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.613599625420108,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 23.46679150861575
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 1.794559993418733,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 46.86202941564564
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 1.794559993418733,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 46.86202941564564
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.4332193108605438,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 11.913448419657108
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.4332193108605438,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 11.913448419657108
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.5059041710028667,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.810386600906533
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.5059041710028667,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.810386600906533
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 1.8250472091639327,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 8.333644905520005
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 1.8250472091639327,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 8.333644905520005
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.3136848427145347,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 2.6874681103413995
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.3136848427145347,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 2.6874681103413995
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.613599625420108,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 23.46679150861575
+    },
+    {
+      "beatmap": "broken-line-skipped",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.613599625420108,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 23.46679150861575
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 2.7687278896027063,
+      "max_combo": 181,
+      "actual_accuracy": 1.0,
+      "pp": 71.53068279260602
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 2.7687278896027063,
+      "max_combo": 181,
+      "actual_accuracy": 1.0,
+      "pp": 71.53068279260602
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 2.7687278896027063,
+      "max_combo": 181,
+      "actual_accuracy": 0.9815837937384899,
+      "pp": 52.20318201150128
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 2.7687278896027063,
+      "max_combo": 181,
+      "actual_accuracy": 0.9815837937384899,
+      "pp": 52.20318201150128
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 3.9462181005964188,
+      "max_combo": 181,
+      "actual_accuracy": 0.9475138121546961,
+      "pp": 82.98103111604952
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 3.9462181005964188,
+      "max_combo": 181,
+      "actual_accuracy": 0.9484346224677717,
+      "pp": 83.71623383061815
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 2.9709190366510807,
+      "max_combo": 181,
+      "actual_accuracy": 0.988950276243094,
+      "pp": 116.82346156061496
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 2.9709190366510807,
+      "max_combo": 181,
+      "actual_accuracy": 0.988950276243094,
+      "pp": 116.82346156061496
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 2.1603596229977575,
+      "max_combo": 181,
+      "actual_accuracy": 0.9705340699815838,
+      "pp": 10.374996497547134
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 2.1603596229977575,
+      "max_combo": 181,
+      "actual_accuracy": 0.9705340699815838,
+      "pp": 10.374996497547134
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 2.9958665090616714,
+      "max_combo": 181,
+      "actual_accuracy": 1.0,
+      "pp": 76.59121200043782
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 2.9958665090616714,
+      "max_combo": 181,
+      "actual_accuracy": 1.0,
+      "pp": 76.59121200043782
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 3.812486461491886,
+      "max_combo": 181,
+      "actual_accuracy": 0.9594843462246777,
+      "pp": 88.79026563397906
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 3.812486461491886,
+      "max_combo": 181,
+      "actual_accuracy": 0.9594843462246777,
+      "pp": 88.79026563397906
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 2.677564432888915,
+      "max_combo": 181,
+      "actual_accuracy": 1.0,
+      "pp": 42.460820040934124
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 2.677564432888915,
+      "max_combo": 181,
+      "actual_accuracy": 1.0,
+      "pp": 42.460820040934124
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 2.7687278896027063,
+      "max_combo": 181,
+      "actual_accuracy": 0.988950276243094,
+      "pp": 58.9495906793964
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 2.7687278896027063,
+      "max_combo": 181,
+      "actual_accuracy": 0.988950276243094,
+      "pp": 58.9495906793964
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 3.9462181005964188,
+      "max_combo": 181,
+      "actual_accuracy": 0.9484346224677717,
+      "pp": 83.71623383061815
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 3.9462181005964188,
+      "max_combo": 181,
+      "actual_accuracy": 0.9484346224677717,
+      "pp": 83.71623383061815
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 2.1603596229977575,
+      "max_combo": 181,
+      "actual_accuracy": 0.9705340699815838,
+      "pp": 10.374996497547134
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 2.1603596229977575,
+      "max_combo": 181,
+      "actual_accuracy": 0.9705340699815838,
+      "pp": 10.374996497547134
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 2.9958665090616714,
+      "max_combo": 181,
+      "actual_accuracy": 1.0,
+      "pp": 76.59121200043782
+    },
+    {
+      "beatmap": "cl-acc-roundtrip",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 2.9958665090616714,
+      "max_combo": 181,
+      "actual_accuracy": 1.0,
+      "pp": 76.59121200043782
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6626274574831013,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 21.561965494932945
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6626274574831013,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 21.561965494932945
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6626274574831013,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 21.561965494932945
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6626274574831013,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 21.561965494932945
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.8909947477563843,
+      "max_combo": 16,
+      "actual_accuracy": 0.9444444444444444,
+      "pp": 5.990762545312798
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.8909947477563843,
+      "max_combo": 16,
+      "actual_accuracy": 0.9444444444444444,
+      "pp": 5.990762545312798
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.904838252154857,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 49.9677836534423
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.904838252154857,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 49.9677836534423
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.5182732158133023,
+      "max_combo": 16,
+      "actual_accuracy": 0.9444444444444444,
+      "pp": 0.2336719116396383
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.5182732158133023,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 1.1816472530275954
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6750770622968832,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 21.57285919011527
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6750770622968832,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 21.57285919011527
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.822806129183437,
+      "max_combo": 16,
+      "actual_accuracy": 0.9444444444444444,
+      "pp": 5.891310923949108
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.822806129183437,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 44.92599132597238
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.7660609845256755,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 10.555462115028332
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.7660609845256755,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 10.555462115028332
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6626274574831013,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 0.2761825492287581
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6626274574831013,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 0.2761825492287581
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.8909947477563843,
+      "max_combo": 16,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 0.6108456750002264
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.8909947477563843,
+      "max_combo": 16,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 0.6108456750002264
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.5182732158133023,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 0.12056567160330142
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.5182732158133023,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 0.12056567160330142
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6750770622968832,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 0.29297601631973275
+    },
+    {
+      "beatmap": "cl-no-hit-circles",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6750770622968832,
+      "max_combo": 16,
+      "actual_accuracy": 1.0,
+      "pp": 0.29297601631973275
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 34.42729130723362
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 34.42729130723362
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6183427254118067
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6183427254118067
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.483849036041981
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.483849036041981
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 4.372611683733154
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 4.372611683733154
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283083992413362
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283083992413362
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 22.25743099491375
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 22.25743099491375
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.5477946102720632
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.5477946102720632
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283769851363223
+    },
+    {
+      "beatmap": "clamp-beatlength",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283769851363223
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.45600155755931776,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.471365642127969
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.45600155755931776,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.471365642127969
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.45600155755931776,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.471365642127969
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.45600155755931776,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.471365642127969
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.5734388618134261,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.490381583457975
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.5734388618134261,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.490381583457975
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.45858185739538265,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 37.571896217990364
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.45858185739538265,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 37.571896217990364
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.29479808523570344,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6802639175187865
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.29479808523570344,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6802639175187865
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.5770362446849693,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.53402845288432
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.5770362446849693,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.53402845288432
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.5595452310618556,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.482283100911197
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.5595452310618556,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.482283100911197
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.43425970164791805,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 4.808349937639942
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.43425970164791805,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 4.808349937639942
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.45600155755931776,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.471365642127969
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.45600155755931776,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.471365642127969
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.5734388618134261,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.490381583457975
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.5734388618134261,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.490381583457975
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.29479808523570344,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6802639175187865
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.29479808523570344,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6802639175187865
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.5770362446849693,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.53402845288432
+    },
+    {
+      "beatmap": "clamp-cs12",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.5770362446849693,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.53402845288432
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 34.42729130723362
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 34.42729130723362
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6183427254118067
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6183427254118067
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.483849036041981
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.483849036041981
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 4.372611683733154
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 4.372611683733154
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283083992413362
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283083992413362
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 22.25743099491375
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 22.25743099491375
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.5477946102720632
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.5477946102720632
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283769851363223
+    },
+    {
+      "beatmap": "clamp-sm5",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283769851363223
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 34.42729130723362
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 34.42729130723362
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.6183427254118067
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.6183427254118067
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.483849036041981
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.483849036041981
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 4.372611683733154
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 4.372611683733154
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.283083992413362
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.283083992413362
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 22.25743099491375
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 22.25743099491375
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.5477946102720632
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.5477946102720632
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.283769851363223
+    },
+    {
+      "beatmap": "clamp-sv-v7",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.283769851363223
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.4965682800598106,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.776672183777205
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.4965682800598106,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.776672183777205
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 1.4965682800598106,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.776672183777205
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 1.4965682800598106,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.776672183777205
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 1.8107020522489288,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 8.224381635979372
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 1.8107020522489288,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 8.224381635979372
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.5229669335528138,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 49.9060018419073
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.5229669335528138,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 49.9060018419073
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.3070950192706574,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 2.6794934228950287
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.3070950192706574,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 2.6794934228950287
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.5784870831286029,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 23.2598918629724
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.5784870831286029,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 23.2598918629724
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 1.7796403141987296,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 46.762829808512954
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 1.7796403141987296,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 46.762829808512954
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.4278334499224337,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 11.899371795475025
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.4278334499224337,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 11.899371795475025
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.4965682800598106,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.776672183777205
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.4965682800598106,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 22.776672183777205
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 1.8107020522489288,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 8.224381635979372
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 1.8107020522489288,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 8.224381635979372
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.3070950192706574,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 2.6794934228950287
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.3070950192706574,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 2.6794934228950287
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.5784870831286029,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 23.2598918629724
+    },
+    {
+      "beatmap": "empty-path-segment",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.5784870831286029,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 23.2598918629724
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 2.2188461765662635,
+      "max_combo": 8,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 13.762814658540558
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 2.2188461765662635,
+      "max_combo": 8,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 13.762814658540558
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.9081803493996592,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 54.38983697258356
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.9081803493996592,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 54.38983697258356
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.6229642267208588,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 4.416574902908638
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.6229642267208588,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 4.416574902908638
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.9317281463850793,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 26.62168576958029
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.9317281463850793,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 26.62168576958029
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 2.1875016702614496,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 52.22946601960736
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 2.1875016702614496,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 52.22946601960736
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.7523082870371378,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 14.26293570139973
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.7523082870371378,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 14.26293570139973
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 2.2188461765662635,
+      "max_combo": 8,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 13.762814658540558
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 2.2188461765662635,
+      "max_combo": 8,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 13.762814658540558
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.6229642267208588,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 4.416574902908638
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.6229642267208588,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 4.416574902908638
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.9317281463850793,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 26.62168576958029
+    },
+    {
+      "beatmap": "frac-pos-float32",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.9317281463850793,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 26.62168576958029
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.3492874405478975,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.441827117629874
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.3492874405478975,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.441827117629874
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.3492874405478975,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.441827117629874
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.3492874405478975,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.441827117629874
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.4616406898911102,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.43958684094403
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.4616406898911102,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.43958684094403
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.3522600130481876,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 37.545344959959216
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.3522600130481876,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 37.545344959959216
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.29052562412535976,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6795173709223327
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.29052562412535976,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6795173709223327
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.36441029042169054,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.445151493695155
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.36441029042169054,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.445151493695155
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.4491069709269616,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.435164476845838
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.4491069709269616,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.435164476845838
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.3499052286579581,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 4.784393160809767
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.3499052286579581,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 4.784393160809767
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.3492874405478975,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.441827117629874
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.3492874405478975,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.441827117629874
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.4616406898911102,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.43958684094403
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.4616406898911102,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 27.43958684094403
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.29052562412535976,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6795173709223327
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.29052562412535976,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6795173709223327
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.36441029042169054,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.445151493695155
+    },
+    {
+      "beatmap": "fractional-pos",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.36441029042169054,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 11.445151493695155
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.7557697849164404,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 25.177116067844203
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.7557697849164404,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 25.177116067844203
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 1.7557697849164404,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 25.177116067844203
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 1.7557697849164404,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 25.177116067844203
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 2.102666918063687,
+      "max_combo": 11,
+      "actual_accuracy": 0.9233716475095786,
+      "pp": 12.596913769088555
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 2.102666918063687,
+      "max_combo": 11,
+      "actual_accuracy": 0.9233716475095786,
+      "pp": 12.596913769088555
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.846522358094836,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 53.89248786220962
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.846522358094836,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 53.89248786220962
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.567678301689714,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 4.158370830911739
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.567678301689714,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 4.158370830911739
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.812550699343937,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 25.643964028280042
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.812550699343937,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 25.643964028280042
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 2.0708592967111117,
+      "max_combo": 11,
+      "actual_accuracy": 0.9233716475095786,
+      "pp": 12.28738052160066
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 2.0708592967111117,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 50.9882913052392
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.6918523344353693,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 13.870654623549171
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.6918523344353693,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 13.870654623549171
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.7557697849164404,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 24.350630257365463
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.7557697849164404,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 24.350630257365463
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 2.102666918063687,
+      "max_combo": 11,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 11.034271170694659
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 2.102666918063687,
+      "max_combo": 11,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 11.034271170694659
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.567678301689714,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 4.120836536176948
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.567678301689714,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 4.120836536176948
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.812550699343937,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 24.81902302623466
+    },
+    {
+      "beatmap": "huge-arc-radius",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.812550699343937,
+      "max_combo": 11,
+      "actual_accuracy": 1.0,
+      "pp": 24.81902302623466
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 11.467716685069348
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 11.467716685069348
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 11.467716685069348
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 11.467716685069348
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 23.9065999206021
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 23.9065999206021
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 26.551867927478547
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 26.551867927478547
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 0.5863016257675095
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 0.5863016257675095
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 11.467716685069348
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 11.467716685069348
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 23.9065999206021
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 23.9065999206021
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 5.500929718394929
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 5.500929718394929
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 11.467716685069348
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 11.467716685069348
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 23.9065999206021
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 23.9065999206021
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 0.5863016257675095
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 0.5863016257675095
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 11.467716685069348
+    },
+    {
+      "beatmap": "no-speed-difficulty",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.0,
+      "max_combo": 2,
+      "actual_accuracy": 1.0,
+      "pp": 11.467716685069348
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.31167373637524276,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 11.436267293119322
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.31167373637524276,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 11.436267293119322
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.31167373637524276,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 11.436267293119322
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.31167373637524276,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 11.436267293119322
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.4160430213334028,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 27.425512800765034
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.4160430213334028,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 27.425512800765034
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.3155314209538415,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 37.539363722575104
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.3155314209538415,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 37.539363722575104
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.25973082448037005,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 0.6774855227842198
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.25973082448037005,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 0.6774855227842198
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.328323347565366,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 11.43911620068086
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.328323347565366,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 11.43911620068086
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.39990612449076773,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 27.421090278122524
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.39990612449076773,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 27.421090278122524
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.3310995405340541,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 4.781786565771131
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.3310995405340541,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 4.781786565771131
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.31167373637524276,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 10.491854929735842
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.31167373637524276,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 10.491854929735842
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.4160430213334028,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 25.16104614744322
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.4160430213334028,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 25.16104614744322
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.25973082448037005,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 0.6219923020815623
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.25973082448037005,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 0.6219923020815623
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.328323347565366,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 10.494728494714511
+    },
+    {
+      "beatmap": "old-stack-repeat",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.328323347565366,
+      "max_combo": 6,
+      "actual_accuracy": 1.0,
+      "pp": 10.494728494714511
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6846610553398135,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 13.045385117710737
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6846610553398135,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 13.045385117710737
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6846610553398135,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 13.045385117710737
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6846610553398135,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 13.045385117710737
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.8944182738428189,
+      "max_combo": 9,
+      "actual_accuracy": 0.9122807017543859,
+      "pp": 2.3253550261908345
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.8944182738428189,
+      "max_combo": 9,
+      "actual_accuracy": 0.9122807017543859,
+      "pp": 2.3253550261908345
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6931256514596764,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 42.550983716421506
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6931256514596764,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 42.550983716421506
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.5755026035336743,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 0.8188970973641948
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.5755026035336743,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 0.8188970973641948
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6878446231365078,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 13.048492532400015
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6878446231365078,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 13.048492532400015
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.8695074895211102,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 31.29767562408203
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.8695074895211102,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 31.29767562408203
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6833512540421226,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 5.5456176463994575
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6833512540421226,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 5.5456176463994575
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6846610553398135,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 12.359501403823202
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6846610553398135,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 12.359501403823202
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.8944182738428189,
+      "max_combo": 9,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 1.4644831329332222
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.8944182738428189,
+      "max_combo": 9,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 1.4644831329332222
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.5755026035336743,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 0.7788338255116506
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.5755026035336743,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 0.7788338255116506
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6878446231365078,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 12.36262564457684
+    },
+    {
+      "beatmap": "old-stack-spinner",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6878446231365078,
+      "max_combo": 9,
+      "actual_accuracy": 1.0,
+      "pp": 12.36262564457684
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 34.42729130723362
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 34.42729130723362
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6183427254118067
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.6183427254118067
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.483849036041981
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 10.483849036041981
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 4.372611683733154
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 4.372611683733154
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283083992413362
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283083992413362
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 22.25743099491375
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 22.25743099491375
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.5477946102720632
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 0.5477946102720632
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283769851363223
+    },
+    {
+      "beatmap": "same-time-green-red",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 4,
+      "actual_accuracy": 1.0,
+      "pp": 9.283769851363223
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.7571304152148212,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 13.767075869560939
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.7571304152148212,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 13.767075869560939
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.7571304152148212,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 13.767075869560939
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.7571304152148212,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 13.767075869560939
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.9444251823852998,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 3.500850150822182
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.9444251823852998,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 3.500850150822182
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.8147013996651161,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 44.68684275953646
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.8147013996651161,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 44.68684275953646
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6034179585002207,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 0.9366497530253787
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6034179585002207,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 0.9366497530253787
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.7732934863241483,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 13.787234050431183
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.7732934863241483,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 13.787234050431183
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.9048577294149426,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 32.83568291601546
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.9048577294149426,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 32.83568291601546
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.7886462684784976,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 5.962562206663424
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.7886462684784976,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 5.962562206663424
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.7571304152148212,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 13.767075869560939
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.7571304152148212,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 13.767075869560939
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.9444251823852998,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 3.500850150822182
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.9444251823852998,
+      "max_combo": 7,
+      "actual_accuracy": 0.9047619047619048,
+      "pp": 3.500850150822182
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.6034179585002207,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 0.9366497530253787
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.6034179585002207,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 0.9366497530253787
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.7732934863241483,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 13.787234050431183
+    },
+    {
+      "beatmap": "snap-back-and-forth",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.7732934863241483,
+      "max_combo": 7,
+      "actual_accuracy": 1.0,
+      "pp": 13.787234050431183
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19809853055390214,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.481755314839365
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19809853055390214,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.481755314839365
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19809853055390214,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.481755314839365
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19809853055390214,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.481755314839365
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.24530726395136823,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.131819243435814
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.24530726395136823,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.131819243435814
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19809853055390214,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 34.42585631445244
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19809853055390214,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 34.42585631445244
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.16998794736386819,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.6177466067430252
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.16998794736386819,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.6177466067430252
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.2091978997253714,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.4824328952427
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.2091978997253714,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.4824328952427
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.24530726395136823,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.131819243435814
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.24530726395136823,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.131819243435814
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.16998794736386819,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 4.371889322647896
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.16998794736386819,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 4.371889322647896
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19809853055390214,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.281650518800522
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19809853055390214,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.281650518800522
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.24530726395136823,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 22.25420932078038
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.24530726395136823,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 22.25420932078038
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.16998794736386819,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.5471912220074869
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.16998794736386819,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.5471912220074869
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.2091978997253714,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.282336388341735
+    },
+    {
+      "beatmap": "sv-before-first-point",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.2091978997253714,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.282336388341735
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.48317146479217
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 34.42729130723362
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 34.42729130723362
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.6183427254118067
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.6183427254118067
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.483849036041981
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 10.483849036041981
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 25.135001980984942
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 4.372611683733154
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 4.372611683733154
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.283083992413362
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 0.22306877294214741,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.283083992413362
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 22.25743099491375
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 0.27795996162152486,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 22.25743099491375
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.5477946102720632
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.19038650394126147,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 0.5477946102720632
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.283769851363223
+    },
+    {
+      "beatmap": "tickmult-f32-v7",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 0.23168448766589977,
+      "max_combo": 5,
+      "actual_accuracy": 1.0,
+      "pp": 9.283769851363223
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 2.2188461765662635,
+      "max_combo": 8,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 13.762814658540558
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 2.2188461765662635,
+      "max_combo": 8,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 13.762814658540558
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.9081803493996592,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 54.38983697258356
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.9081803493996592,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 54.38983697258356
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.6229642267208588,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 4.416574902908638
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.6229642267208588,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 4.416574902908638
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.9317281463850793,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 26.62168576958029
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.9317281463850793,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 26.62168576958029
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 2.1875016702614496,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 52.22946601960736
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 2.1875016702614496,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 52.22946601960736
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.7523082870371378,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 14.26293570139973
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.7523082870371378,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 14.26293570139973
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.850358890850473,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 25.859256647162436
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 2.2188461765662635,
+      "max_combo": 8,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 13.762814658540558
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 2.2188461765662635,
+      "max_combo": 8,
+      "actual_accuracy": 0.9166666666666666,
+      "pp": 13.762814658540558
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 1.6229642267208588,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 4.416574902908638
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 1.6229642267208588,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 4.416574902908638
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.9317281463850793,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 26.62168576958029
+    },
+    {
+      "beatmap": "utf16-beatmap",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.9317281463850793,
+      "max_combo": 8,
+      "actual_accuracy": 1.0,
+      "pp": 26.62168576958029
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.06147073847419,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 22.77977932983472
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.06147073847419,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 22.77977932983472
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 1.06147073847419,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 22.77977932983472
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 1.06147073847419,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 22.77977932983472
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 1.4387865097252643,
+      "max_combo": 10,
+      "actual_accuracy": 0.9298245614035088,
+      "pp": 9.367580895522124
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 1.4387865097252643,
+      "max_combo": 10,
+      "actual_accuracy": 0.9298245614035088,
+      "pp": 9.367580895522124
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.0776385844836283,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 52.06088076458889
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.0776385844836283,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 52.06088076458889
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.8877559305140184,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 1.3781554211667588
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.8877559305140184,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 1.3781554211667588
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.0709019817858403,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 22.803763948168474
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.0709019817858403,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 22.803763948168474
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 1.3994210107702523,
+      "max_combo": 10,
+      "actual_accuracy": 0.9298245614035088,
+      "pp": 9.201293433773866
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 1.3994210107702523,
+      "max_combo": 10,
+      "actual_accuracy": 0.9298245614035088,
+      "pp": 9.201293433773866
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.087482532664143,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 11.40017572244288
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.087482532664143,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 11.40017572244288
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 1.06147073847419,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 22.012239897632377
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 1.06147073847419,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 22.012239897632377
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 1.4387865097252643,
+      "max_combo": 10,
+      "actual_accuracy": 0.9259259259259259,
+      "pp": 7.652348531565721
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 1.4387865097252643,
+      "max_combo": 10,
+      "actual_accuracy": 0.9259259259259259,
+      "pp": 7.652348531565721
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 0.8877559305140184,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 1.339580238019174
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 0.8877559305140184,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 1.339580238019174
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 1.0709019817858403,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 22.0363068147151
+    },
+    {
+      "beatmap": "zero-slider-repeats",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 1.0709019817858403,
+      "max_combo": 10,
+      "actual_accuracy": 1.0,
+      "pp": 22.0363068147151
+    }
+  ]
+}

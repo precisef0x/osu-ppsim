@@ -1,0 +1,70 @@
+# В CI попадает только то, что самодостаточно.
+#
+# Фазовые гейты (tests/run_all.py) здесь не запускаются, и это осознанно:
+# фазам 1-4 нужны фикстуры оракула (57 МБ, генерируются, в .gitignore),
+# фазам 5-6 — собранный osu-tools, а это 856 МБ клонов и .NET 8 SDK.
+# Тянуть всё это на каждый пуш ради гейтов, которые проверяют соответствие
+# C#-оригиналу, смысла нет: оригинал меняется отдельно от этого репозитория,
+# и сверяться с ним надо осознанно, при ребалансе, а не по расписанию CI.
+#
+# Остаются два гейта, которым хватает того, что лежит в git: снапшот ловит
+# молча уехавший расчёт, гейт публичного API — сломанный контракт README.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# Windows-раннеры кодируют stdout в cp1252, а гейты печатают кириллицу —
+# без UTF-8 падает сам print, ещё до вердикта сверки.
+env:
+  PYTHONUTF8: "1"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # Только линтер: правила выбраны в pyproject, [tool.ruff.lint].
+      # `ruff format` намеренно не гоняем — форматирование здесь ручное,
+      # переносы строк расставлены под структуру C#-оригинала.
+      - run: pip install ruff
+      - run: ruff check .
+
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Ставим как обычный пользователь по README: заодно проверяем,
+      # что пакет собирается и внешних зависимостей действительно нет.
+      - run: pip install .
+
+      # Гейты ниже кладут корень репозитория в sys.path и импортируют исходники,
+      # поэтому забытый подпакет в [tool.hatch.build.targets.wheel] они бы
+      # не заметили. Здесь уходим из корня, чтобы импортировался именно wheel.
+      - name: Импорт установленного пакета
+        working-directory: ${{ runner.temp }}
+        run: python -c "import osu_ppsim, osu_ppsim.beatmap, osu_ppsim.difficulty, osu_ppsim.difficulty.skills, osu_ppsim.difficulty.evaluators, osu_ppsim.performance; print(osu_ppsim.__version__)"
+
+      - name: Снапшот-гейт
+        run: python tests/test_snapshot.py
+
+      - name: Гейт публичного API
+        run: python tests/test_public_api.py

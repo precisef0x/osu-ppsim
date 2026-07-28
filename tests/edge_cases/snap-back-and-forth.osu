@@ -1,0 +1,25 @@
+osu file format v128
+
+[General]
+Mode: 0
+StackLeniency: 0.7
+
+[Difficulty]
+HPDrainRate:5
+CircleSize:4
+OverallDifficulty:7
+ApproachRate:9
+SliderMultiplier:1.4
+SliderTickRate:1
+
+[TimingPoints]
+0,500,4,2,0,100,1,0
+
+[HitObjects]
+100,100,500,1,0
+300,100,1000,1,0
+256,192,1500,1,0
+150,192,2000,1,0
+256.0515,192.0515,2500,1,0
+360,192,3000,1,0
+100,300,3500,1,0
