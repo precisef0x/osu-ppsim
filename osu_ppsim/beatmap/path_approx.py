@@ -98,7 +98,7 @@ def bspline_to_piecewise_linear(control_points: list[Vec2], degree: int) -> list
     развёрнута в стек — как и в оригинале.
     """
     if degree < 1:
-        raise ValueError(f"степень должна быть не меньше 1, получено {degree}")
+        raise ValueError(f"degree must be at least 1, got {degree}")
 
     if len(control_points) < 2:
         return [] if not control_points else [control_points[0]]

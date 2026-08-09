@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "osu-ppsim"
-version = "0.2.0"
-description = "Расчёт pp за FC-прохождение карты osu!standard на заданной accuracy"
+version = "0.3.0"
+description = "Расчёт pp для карты osu!standard: за FC на заданной accuracy либо за произвольный скор"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }

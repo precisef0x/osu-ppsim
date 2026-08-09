@@ -16,6 +16,12 @@ from ..beatmap.objects import HitCircle, Slider, Spinner
 from ..beatmap.processor import get_max_combo, post_process, reflect_vertically
 from ..mods import Difficulty, Mods, apply_to_difficulty, parse_mods
 from .hitobject import create_difficulty_hit_objects
+from .legacy_score import (
+    difficulty_peppy_stars,
+    drain_length,
+    maximum_legacy_combo_score,
+    nested_score_per_object,
+)
 from .skills.aim import Aim
 from .skills.base import HarmonicSkill
 from .skills.flashlight import Flashlight
@@ -52,6 +58,16 @@ class OsuDifficultyAttributes:
     hit_circle_count: int = 0
     slider_count: int = 0
     spinner_count: int = 0
+
+    #: Величины легаси-скоринга. Нужны только оценке промахов по сумме очков
+    #: классического скора. Источники разные, как и в C#: множитель снимается
+    #: с ИСХОДНОЙ карты (WorkingBeatmap.Beatmap), а две остальные — с playable,
+    #: то есть уже с применёнными модами. На поддерживаемых модах это ничего
+    #: не меняет: HR и EZ правят CS/AR/OD/HP, а число тиков и хвостов зависит
+    #: от тайминга и длины слайдеров.
+    legacy_score_base_multiplier: float = 0.0
+    nested_score_per_object: float = 0.0
+    maximum_legacy_combo_score: float = 0.0
 
 
 def aim_difficulty_rating(difficulty_value: float) -> float:
@@ -96,8 +112,8 @@ def prepare_beatmap(beatmap: Beatmap, mods: Mods) -> None:
     """
     if beatmap.processed:
         raise ValueError(
-            "карта уже обработана: расчёт меняет её на месте, поэтому повторный прогон "
-            "применил бы поправки модов дважды. Разберите файл заново или используйте Simulator."
+            "beatmap already processed: the calculation mutates it in place, so a second run "
+            "would apply the mod adjustments twice. Decode the file again, or use Simulator."
         )
     beatmap.processed = True
 
@@ -132,6 +148,13 @@ def calculate_difficulty(beatmap: Beatmap, mods: Mods | str | None = None) -> Os
     проставляются умолчания и стак. Так же устроен и C#-калькулятор.
     """
     resolved = parse_mods(mods)
+
+    # ВНИМАНИЕ: множитель ScoreV1 считается от ИСХОДНЫХ настроек сложности,
+    # до поправок модов — в C# он берётся из WorkingBeatmap.Beatmap, а не из
+    # playable-карты. Поэтому снимается до prepare_beatmap, который правит
+    # HP/OD/CS на месте.
+    legacy_multiplier = difficulty_peppy_stars(beatmap, len(beatmap.hit_objects), drain_length(beatmap))
+
     prepare_beatmap(beatmap, resolved)
 
     if not beatmap.hit_objects:
@@ -212,4 +235,7 @@ def calculate_difficulty(beatmap: Beatmap, mods: Mods | str | None = None) -> Os
         hit_circle_count=sum(1 for h in beatmap.hit_objects if isinstance(h, HitCircle)),
         slider_count=sum(1 for h in beatmap.hit_objects if isinstance(h, Slider)),
         spinner_count=sum(1 for h in beatmap.hit_objects if isinstance(h, Spinner)),
+        legacy_score_base_multiplier=legacy_multiplier,
+        nested_score_per_object=nested_score_per_object(beatmap, len(beatmap.hit_objects)),
+        maximum_legacy_combo_score=maximum_legacy_combo_score(beatmap, legacy_multiplier),
     )

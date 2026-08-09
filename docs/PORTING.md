@@ -1,430 +1,467 @@
-# Портирование: как устроено и что учесть при обновлении
+# Porting: how it is built and what to watch at the next update
 
-Целевая версия — **`OsuDifficultyCalculator.Version = 20260706`**, ребаланс
-«2026 Q2 SR & PP release» ([ppy/osu#37850](https://github.com/ppy/osu/pull/37850)).
+The target version is **`OsuDifficultyCalculator.Version = 20260706`**, the
+"2026 Q2 SR & PP release" rebalance
+([ppy/osu#37850](https://github.com/ppy/osu/pull/37850)).
 
-## Ключевые решения
+## Key decisions
 
-**Структура повторяет C# один в один.** Файлы, классы и методы называются так же,
-как в `ppy/osu`; в шапке каждого модуля — источник и хеш коммита. Это не эстетика,
-а стратегия сопровождения: ppy делает ребаланс примерно раз в полгода, и при
-зеркальной структуре обновление сводится к чтению диффа, а не к археологии.
+**The structure mirrors the C# one to one.** Files, classes and methods carry
+the same names as in `ppy/osu`; each module header names its source and the
+commit hash. This is not aesthetics but a maintenance strategy: ppy rebalances
+roughly twice a year, and with a mirrored structure an update comes down to
+reading a diff rather than doing archaeology.
 
-**`float32` там и только там, где он есть в C#.** osu! хранит `Vector2`
-на `float`, а вся difficulty-математика идёт в `double`. Класс `Vec2` округляет
-компоненты до float32 на каждой операции — округление на каждом шаге, а не один
-раз в конце, потому что промежуточные значения в C# тоже усечены.
+**`float32` where, and only where, C# has it.** osu! keeps `Vector2` in
+`float`, while all of the difficulty math runs in `double`. The `Vec2` class
+rounds its components to float32 on every operation — on every step rather than
+once at the end, because the intermediate values in C# are truncated too.
 
 ```python
-from ctypes import c_float
-def f32(x: float) -> float: return c_float(x).value
+_PACK_F32 = struct.Struct("<f").pack
+_UNPACK_F32 = struct.Struct("<f").unpack
+
+def f32(x: float) -> float:
+    return _UNPACK_F32(_PACK_F32(x))[0]
 ```
 
-Порядка 200 нс на вызов, десятки тысяч вызовов на карту — на фоне расчёта
-незаметно. Без этого расхождения копятся на длинных картах.
+Tens of thousands of calls per beatmap; about 22% of the total runtime goes
+into this emulation, and without it the deviations accumulate on long beatmaps.
 
-**`Erf`/`ErfInv` портированы из `DiffUtils`, а не взяты из `math`.** osu!
-использует конкретное рациональное приближение; у стандартной реализации другие
-младшие разряды, а от них напрямую зависит оценка девиации в pp-формуле.
+**`Erf`/`ErfInv` are ported from `DiffUtils` rather than taken from `math`.**
+osu! uses one specific rational approximation; the standard implementation has
+different low-order digits, and the deviation estimate in the pp formula
+depends on them directly.
 
-**Версия зашита в код.** `SUPPORTED_DIFFCALC_VERSION` доступен из публичного API,
-чтобы потребитель мог проверить, что именно он считает.
+**The version is baked into the code.** `SUPPORTED_DIFFCALC_VERSION` is exposed
+from the public API so that a consumer can check what exactly is being
+computed.
 
-## Что чему соответствует
+## What maps to what
 
 ```
 osu_ppsim/
-  __init__.py            публичный API: Simulator, pp_for_accuracy, Result
-  f32.py                 Vec2 и f32 — одинарная точность там, где она есть в osu!
-  mods.py                моды: скорость игры, поправки HR/EZ к сложности
+  __init__.py            public API: Simulator, pp_for_accuracy, Score, Result
+  f32.py                 Vec2 and f32 — single precision where osu! has it
+  mods.py                mods: clock rate, HR/EZ difficulty adjustments
   beatmap/
     decoder.py           LegacyBeatmapDecoder + ConvertHitObjectParser
-    objects.py           HitCircle / Slider / Spinner, PathType, вложенные объекты
-    difficulty_info.py   CS/AR/OD -> Scale, Radius, TimePreempt, окна попадания
-    path_approx.py       PathApproximator: безье, Catmull, дуга, прямая
-    slider_path.py       SliderPath: длина, PositionAt, подгонка под ExpectedDistance
-    slider_events.py     SliderEventGenerator: тики, реверсы, хвост
-    defaults.py          ApplyDefaults: масштаб, preempt, геометрия слайдера
-    processor.py         OsuBeatmapProcessor: стакинг (новый и old-style), MaxCombo
+    objects.py           HitCircle / Slider / Spinner, PathType, nested objects
+    difficulty_info.py   CS/AR/OD -> Scale, Radius, TimePreempt, hit windows
+    path_approx.py       PathApproximator: bezier, Catmull, arc, linear
+    slider_path.py       SliderPath: length, PositionAt, fit to ExpectedDistance
+    slider_events.py     SliderEventGenerator: ticks, repeats, tail
+    defaults.py          ApplyDefaults: scale, preempt, slider geometry
+    processor.py         OsuBeatmapProcessor: stacking (new and old-style), MaxCombo
   difficulty/
     hitobject.py         OsuDifficultyHitObject
     utils.py             DiffUtils
+    legacy_score.py      LegacyScoreUtils + OsuLegacyScoreSimulator (combo score)
     skills/              Strain / VariableLengthStrain / Harmonic + Aim, Speed, Reading, Flashlight
     evaluators/          snap, flow, agility (Aim), speed, rhythm, reading, flashlight
     calculator.py        OsuDifficultyCalculator -> OsuDifficultyAttributes
   performance/
-    accuracy.py          accuracy -> раскладка 300/100/50 (из osu-tools)
-    calculator.py        OsuPerformanceCalculator, FC-подмножество
+    accuracy.py          accuracy -> a 300/100/50 breakdown (from osu-tools)
+    legacy_miss.py       OsuLegacyScoreMissCalculator
+    calculator.py        OsuPerformanceCalculator
 ```
 
-Единственное сознательное отступление от зеркальности: `PERFORMANCE_BASE_MULTIPLIER`,
-`PERFORMANCE_NORM_EXPONENT` и `aim_difficulty_to_performance` в C# лежат
-в `OsuPerformanceCalculator`, а здесь — в `difficulty/calculator.py`. Иначе
-получился бы циклический импорт: difficulty-калькулятор читает эти константы,
-а performance-калькулятор — difficulty-атрибуты.
+The single deliberate departure from mirroring: `PERFORMANCE_BASE_MULTIPLIER`,
+`PERFORMANCE_NORM_EXPONENT` and `aim_difficulty_to_performance` live in
+`OsuPerformanceCalculator` in C#, and in `difficulty/calculator.py` here.
+Otherwise there would be a circular import: the difficulty calculator reads
+those constants, and the performance calculator reads difficulty attributes.
 
-## Область охвата
+## Scope
 
-Только osu!standard, только FC. Обе механики счёта поддержаны: лазерная
-и классическая (мод `CL`). За бортом осознанно оставлены не-FC скоры (все ветки
-miss-penalty и оценки слайдербреков), legacy-скоринг по сумме очков
-(`OsuLegacyScoreMissCalculator`), моды вне списка поддерживаемых, остальные
-режимы игры и `CalculateTimed`.
+osu!standard only. Both scoring mechanics are supported — lazer's and classic
+(the `CL` mod) — and so is any score, not only an FC: misses, dropped combo,
+unheld slider tails, missed ticks, and classic scores with a known ScoreV1
+total, for which misses are estimated from that total.
 
-**Почему FC — важное упрощение.** При `countMiss = 0` и максимальном комбо
-`effectiveMissCount` схлопывается в ноль, вместе с ним отключаются все miss-penalty
-и `getComboScalingFactor`, а `sliderNerfFactor` становится ровно `1.0`.
-От `OsuPerformanceCalculator` (552 строки) остаётся около двухсот.
+Deliberately left outside: mods beyond the supported list, the other rulesets,
+and `CalculateTimed`.
 
-## Обновление после следующего ребаланса
+Releases 0.1.0 and 0.2.0 covered FCs only, and several sections below were
+written under that scope — they are marked where it matters.
 
-1. Обновить пины в [oracle/PINNED.md](../oracle/PINNED.md), пересобрать оракул.
-2. Перегенерировать фикстуры: `python3 tools/oracle.py fixtures`.
-3. Прогнать гейты: `python3 tests/run_all.py`.
-4. Править то, что покраснело — снизу вверх, начиная с самой ранней упавшей фазы.
-5. Прогнать корпус обеими проверками (см. [ACCURACY.md](ACCURACY.md)).
+## Updating after the next rebalance
 
-Раздел «Ловушки» ниже стоит перечитать перед началом: там собрано всё, что уже
-один раз стоило времени.
+1. Update the pins in [oracle/PINNED.md](../oracle/PINNED.md), rebuild the oracle.
+2. Regenerate fixtures: `python3 tools/oracle.py fixtures`.
+3. Run the gates: `python3 tests/run_all.py`.
+4. Fix whatever went red — bottom-up, starting from the earliest failing phase.
+5. Run the corpus through both checks (see [ACCURACY.md](ACCURACY.md)).
+
+The "Pitfalls" section below is worth re-reading first: it collects everything
+that has already cost time once.
 
 ---
 
-# Ловушки портирования
+# Porting pitfalls
 
-Конкретные, проверенные на реальных данных. Каждая молча испортила бы результат.
+Concrete ones, verified on real data. Every one of them would have quietly
+spoiled the result.
 
-**Деление на ноль.** В C# `x / 0.0` даёт `Infinity`, в Python это `ZeroDivisionError`.
-Не абстракция: на карте `nan-slider` поле `tick_distance` пятого объекта реально равно
-`Infinity`, и генератор тиков обязан это переварить, выдав ноль тиков. Итоговые звёзды
-при этом осмысленны (0.8705817579435355). Порт должен воспроизводить такое поведение,
-а не «чинить» его — отсюда же требование к сравнению фикстур: `NaN` и `Infinity`
-сохраняются в дампе как строки, а не подменяются на `null`.
+**Division by zero.** In C# `x / 0.0` yields `Infinity`; in Python it is a
+`ZeroDivisionError`. Not an abstraction: on the `nan-slider` beatmap the
+`tick_distance` of the fifth object really is `Infinity`, and the tick
+generator has to digest that and emit zero ticks. The resulting star rating is
+still meaningful (0.8705817579435355). The port must reproduce that behaviour
+rather than "fix" it — hence also the requirement on fixture comparison: `NaN`
+and `Infinity` are stored in the dump as strings rather than replaced with
+`null`.
 
-**`StrainTime` переименован в `AdjustedDeltaTime`.** Это часть ребаланса 2026.
-В rosu-pp поле до сих пор зовётся `strain_time` — удобный маркер того, на какой
-версии находится чужой код.
+**`StrainTime` was renamed to `AdjustedDeltaTime`.** That is part of the 2026
+rebalance. In rosu-pp the field is still called `strain_time` — a handy marker
+of which version somebody else's code sits on.
 
-**`GetCurrentStrainPeaks()` мутирует состояние.** У `VariableLengthStrainSkill` он
-лениво запечатывает последнюю секцию и дописывает её в `strainPeaks`. Вызов в середине
-обработки досрочно закроет секцию и отравит весь дальнейший расчёт. Поэтому снимать
-пики можно только после завершения `Calculate()`, и по этой же причине накопительную
-кривую `DifficultyValue()` по объектам снять нельзя — для локализации расхождений
-используются пики секций и пообъектные `ObjectDifficulties`.
+**`GetCurrentStrainPeaks()` mutates state.** On `VariableLengthStrainSkill` it
+lazily seals the last section and appends it to `strainPeaks`. Calling it
+mid-processing closes a section early and poisons everything downstream. So
+peaks may only be taken after `Calculate()` has finished, and for the same
+reason a cumulative `DifficultyValue()` curve over objects cannot be taken —
+section peaks and per-object `ObjectDifficulties` are used to localise
+discrepancies instead.
 
-**Проверка модов даёт независимое подтверждение анализа.** HD двигает только
-`reading_difficulty` (1.780 → 2.211), FL — только `flashlight_difficulty`, а вместе они
-двигают оба (0.998 → 1.299), потому что `FlashlightEvaluator` учитывает прозрачность и
-`hidden_bonus`. Отдельного HD-бонуса в pp-формуле нет.
+**Checking mods gives independent confirmation of the analysis.** HD moves only
+`reading_difficulty` (1.780 → 2.211), FL only `flashlight_difficulty`, and
+together they move both (0.998 → 1.299), because `FlashlightEvaluator` accounts
+for opacity and `hidden_bonus`. There is no separate HD bonus in the pp
+formula.
 
-### Найденное в фазе 1
+### Found in phase 1
 
-**Порядок операций важнее алгебры.** `Duration` в C# — это `EndTime - StartTime`,
-где `EndTime = StartTime + SpanCount * Distance / Velocity`. Алгебраически это то же
-самое, что считать длительность напрямую, а в плавающей точке — нет: при `start_time`
-в десятки тысяч миллисекунд вычитание съедает младшие разряды. Расходились все
-674 слайдера на `801165`, пока порядок не был воспроизведён буквально.
+**Order of operations beats algebra.** `Duration` in C# is
+`EndTime - StartTime`, where `EndTime = StartTime + SpanCount * Distance /
+Velocity`. Algebraically that is the same as computing the duration directly;
+in floating point it is not: with a `start_time` in the tens of thousands of
+milliseconds the subtraction eats the low-order digits. All 674 sliders on
+`801165` diverged until the order was reproduced literally.
 
-**osuTK нормирует умножением на обратную длину**, а не делением:
+**osuTK normalises by multiplying by the reciprocal length**, not by dividing:
 
 ```csharp
 float scale = 1.0f / Length;
 X *= scale; Y *= scale;
 ```
 
-`x * (1/L)` не равно `x / L`, и разница переносится в последнюю точку пути при
-подгонке под `ExpectedDistance`. Ловилось на 90 вложенных объектах из 1829.
+`x * (1/L)` is not equal to `x / L`, and the difference carries into the last
+point of the path when fitting to `ExpectedDistance`. Caught on 90 nested
+objects out of 1829.
 
-**`0.7f`, поднятый в double, равен 0.699999988079071.** В формуле масштаба
-`0.7f * DifficultyRange(cs)` float продвигается до double именно так, а не до 0.7.
+**`0.7f` promoted to double equals 0.699999988079071.** In the scale formula
+`0.7f * DifficultyRange(cs)` the float is promoted to double exactly like that,
+not to 0.7.
 
-**Сравнение с фикстурами требует знать точность поля.** Дамп пишет `float`-поля
-osu! как float32: литерал `283.402` в JSON — это на самом деле `283.4020080566406`.
-Python читает его как double, и прямое сравнение даёт ложные расхождения.
-Поэтому в `tests/compare.py` у каждого поля указана точность, а float32-поля
-приводятся к float32 с обеих сторон. Первый прогон гейта дал 938 «расхождений»,
-из которых настоящими оказались 90.
+**Comparing against fixtures requires knowing each field's precision.** The
+dump writes osu!'s `float` fields as float32: the literal `283.402` in JSON is
+really `283.4020080566406`. Python reads it as a double, and a direct
+comparison produces false mismatches. So `tests/compare.py` records a precision
+for every field, and float32 fields are coerced to float32 on both sides. The
+first run of the gate reported 938 "mismatches", of which 90 were real.
 
-### Найденное в фазе 2
+### Found in phase 2
 
-**Float-константы нельзя вычислять в double.** В C# написано
-`NORMALISED_RADIUS * 2.4f`, где множитель **уже** float32. Посчитать `50 * 2.4`
-в double и округлить результат — не то же самое:
+**Float constants must not be computed in double.** C# says
+`NORMALISED_RADIUS * 2.4f`, where the multiplier is **already** float32.
+Computing `50 * 2.4` in double and rounding the result is not the same thing:
 
-| | значение |
+| | value |
 |---|---|
-| `f32(50 * 2.4)` (неверно) | `120.0` |
-| `f32(50 * f32(2.4))` (верно) | `120.00000762939453` |
+| `f32(50 * 2.4)` (wrong) | `120.0` |
+| `f32(50 * f32(2.4))` (right) | `120.00000762939453` |
 
-Разница в 7.6e-06 переезжает прямо в `MinimumJumpDistance` и ловится на 15 объектах
-из 123 на `diffcalc-test`. Правило простое: если в C# у литерала суффикс `f`,
-округление до float32 происходит **до** арифметики, а не после.
+A difference of 7.6e-06 carries straight into `MinimumJumpDistance` and is
+caught on 15 of the 123 objects on `diffcalc-test`. The rule is simple: if a
+literal in C# has the `f` suffix, rounding to float32 happens **before** the
+arithmetic, not after.
 
-**У `DiffUtils.Pow` две перегрузки, и выбор делает компилятор по типу литерала.**
+**`DiffUtils.Pow` has two overloads, and the compiler picks by literal type.**
 
 ```csharp
 Pow(x, 0.3)  // -> Pow(double, double) -> Math.Pow
-Pow(x, 5)    // -> Pow(double, int)    -> x*x*x*x*x повторным умножением
+Pow(x, 5)    // -> Pow(double, int)    -> x*x*x*x*x by repeated multiplication
 ```
 
-Для степеней 0–5 целочисленная версия перемножает вручную, и результат отличается
-от `Math.Pow` в младших разрядах. В `osu_ppsim/difficulty/utils.py` это две разные
-функции, и на каждом месте вызова надо смотреть в исходник, какая сработала.
+For exponents 0–5 the integer version multiplies by hand, and the result
+differs from `Math.Pow` in the low-order digits. In
+`osu_ppsim/difficulty/utils.py` these are two distinct functions, and at every
+call site one has to look at the source to see which one fired.
 
-**Тип переменной решает, где округление.** В
+**The variable's type decides where the rounding happens.** In
 `MinimumJumpDistance = Max(0, Min(LazyJumpDistance - delta, tailJumpDistance - maximum_slider_radius))`
-левый аргумент — double (расширенный float), а правый — `float - float`, то есть
-вычитание идёт во float32. Смотреть надо на объявление каждой переменной, а не
-на вид выражения.
+the left argument is a double (a promoted float) while the right one is
+`float - float`, so that subtraction runs in float32. One has to look at each
+variable's declaration, not at the shape of the expression.
 
-### Найденное в фазе 3
+### Found in phase 3
 
-**Встроенную `sum()` использовать нельзя.** Начиная с Python 3.12 она применяет
-компенсационное суммирование Ноймайера и даёт результат **точнее**, чем
-`Enumerable.Sum` в C#, который просто складывает по порядку:
+**The built-in `sum()` cannot be used.** Since Python 3.12 it applies Neumaier
+compensated summation and produces a result **more accurate** than
+`Enumerable.Sum` in C#, which simply adds in order:
 
 ```
-sum(peaks)        -> 286.9632310019827   (совпадает с math.fsum)
-явный цикл        -> 286.9632310019824   <- как в C#
+sum(peaks)        -> 286.9632310019827   (matches math.fsum)
+explicit loop     -> 286.9632310019824   <- as in C#
 ```
 
-Разница в последних разрядах, но она реальна: на `diffcalc-test` под FL итоговая
-сложность расходилась в 17-м знаке. В `osu_ppsim/difficulty/utils.py` заведена
-`sequential_sum`, и все суммирования идут через неё. Это тот редкий случай, когда
-более точная реализация — неправильная.
+The difference is in the last digits, but it is real: on `diffcalc-test` under
+FL the final difficulty diverged in the 17th digit. `sequential_sum` was added
+to `osu_ppsim/difficulty/utils.py`, and every summation goes through it. This
+is the rare case where the more accurate implementation is the wrong one.
 
-**`ErfInv` и `Erf` в osu! свои.** `Erf` — приближение Абрамовица и Стигана
-(формула 7.1.26), отличается от `math.erf` примерно на 1e-07. От этих разрядов
-напрямую зависит оценка девиации в pp-формуле, так что брать стандартную нельзя.
+**osu! has its own `ErfInv` and `Erf`.** `Erf` is the Abramowitz and Stegun
+approximation (formula 7.1.26) and differs from `math.erf` by roughly 1e-07.
+The deviation estimate in the pp formula depends on those digits directly, so
+the standard one cannot be used.
 
-**Мод HD меняет данные, а не только картинку.** `OsuModHidden.ApplyToBeatmap`
-переписывает `TimeFadeIn` у всех объектов **кроме слайдеров**:
+**The HD mod changes data, not just visuals.** `OsuModHidden.ApplyToBeatmap`
+rewrites `TimeFadeIn` on every object **except sliders**:
 
 ```csharp
 if (osuObject is not Slider)
     osuObject.TimeFadeIn = osuObject.TimePreempt * FADE_IN_DURATION_MULTIPLIER;  // 0.4
 ```
 
-`OpacityAt` берёт отсюда начало затухания, поэтому под HD прозрачность
-считается иначе — и весь скилл Reading вместе с ней. Подсказка была в самом
-коде: комментарий «equal to TimeFadeIn **minus any adjustments from the HD mod**»
-объясняет, почему длительность появления там пересчитывается вручную,
-а начало затухания — нет.
+`OpacityAt` takes the start of the fade from there, so under HD opacity is
+computed differently — and the whole Reading skill with it. The hint was in the
+code itself: the comment "equal to TimeFadeIn **minus any adjustments from the
+HD mod**" explains why the fade-in duration is recomputed by hand there while
+the start of the fade is not.
 
-Стоила эта ошибка 1569 расхождений на `801165` под HD. И она же вскрыла дыру
-в гейте фазы 2: тест гонял только NM и DT, где `TimeFadeIn` не меняется, так что
-ветка не проверялась вовсе. Теперь в наборе есть HD и HDDT.
+That mistake cost 1569 mismatches on `801165` under HD. It also exposed a hole
+in the phase 2 gate: the test only ran NM and DT, where `TimeFadeIn` does not
+change, so the branch was never exercised at all. HD and HDDT are in the set
+now.
 
-**Эвалуаторы объявлены `public static`.** Дамп зовёт их напрямую и пишет
-пообъектные значения ещё до накопления страйна. Без этого расхождение внутри
-скилла локализовать нечем: видно только накопленный результат, где ошибка
-размазана по всем последующим объектам.
+**The evaluators are declared `public static`.** The dump calls them directly
+and writes per-object values before any strain accumulates. Without that there
+is no way to localise a discrepancy inside a skill: only the accumulated result
+is visible, where the error is smeared across every subsequent object.
 
-**Конструктор `StrainPeak` округляет длину секции.**
+**The `StrainPeak` constructor rounds the section length.**
 
 ```csharp
 public StrainPeak(double value, double sectionLength)
 {
     Value = value;
-    SectionLength = Math.Round(sectionLength);   // ← легко пропустить
+    SectionLength = Math.Round(sectionLength);   // ← easy to miss
 }
 ```
 
-Под rate-модами времена дробные, и без округления длины расходятся: 190.667
-против 191. Проявляется только с DT — на NM времена целые и округление
-незаметно. Отдельная тонкость: накопитель `totalLength` складывает **сырую**
-длину, а вычитает уже округлённую.
+Under rate mods the times are fractional, and without the rounding the lengths
+diverge: 190.667 against 191. It only shows with DT — on NM the times are whole
+and the rounding is invisible. A separate subtlety: the `totalLength`
+accumulator adds the **raw** length but subtracts the rounded one.
 
-**`List<T>.BinarySearch` при равных элементах возвращает произвольное
-совпадение**, а `bisect_left` — крайнее левое. От этого зависит порядок равных
-пиков в `AddInPlace`. Сейчас заметно только на нулевых страйнах, которые всё
-равно отфильтровываются, поэтому в `base.py` воспроизведён именно алгоритм .NET:
-на ненулевых равных значениях разница попала бы прямо в сложность.
+**`List<T>.BinarySearch` returns an arbitrary match among equal elements**,
+whereas `bisect_left` returns the leftmost. The order of equal peaks in
+`AddInPlace` depends on it. Right now it only shows on zero strains, which are
+filtered out anyway, so `base.py` reproduces .NET's algorithm exactly: on
+non-zero equal values the difference would land straight in the difficulty.
 
-### Найденное в фазе 5
+### Found in phase 5
 
-**Мод HR переворачивает карту по вертикали.** Помимо повышения CS/AR/OD,
-`OsuModHardRock` реализует `IApplicableToHitObject`:
+**The HR mod flips the beatmap vertically.** Besides raising CS/AR/OD,
+`OsuModHardRock` implements `IApplicableToHitObject`:
 
 ```csharp
 osuObject.Position = new Vector2(osuObject.Position.X, OsuPlayfield.BASE_SIZE.Y - osuObject.Y);
-// у слайдеров дополнительно: контрольные точки отражаются как y -> -y
+// sliders additionally: control points are reflected as y -> -y
 ```
 
-Отражение меняет дистанции и углы, поэтому расходятся аим и reading — а скорость
-нет, она зависит только от времени. По этому следу ошибка и нашлась: `speed_difficulty`
-совпадал точно, всё остальное плыло на 1e-5.
+The reflection changes distances and angles, so aim and reading diverge while
+speed does not — it depends only on time. That trail is how the bug was found:
+`speed_difficulty` matched exactly while everything else drifted by 1e-5.
 
-Порядок применения модов в `WorkingBeatmap.GetPlayableBeatmap` оказался важен:
+The order in which mods are applied in `WorkingBeatmap.GetPlayableBeatmap`
+turned out to matter:
 
-1. `PreProcess` — принудительное новое комбо;
-2. `ApplyDefaults` — масштаб, preempt, геометрия, вложенные объекты;
-3. `IApplicableToHitObject` — **отражение HR**;
-4. `PostProcess` — стакинг;
-5. `IApplicableToBeatmap` — **правка TimeFadeIn под HD**.
+1. `PreProcess` — forced new combo;
+2. `ApplyDefaults` — scale, preempt, geometry, nested objects;
+3. `IApplicableToHitObject` — **the HR reflection**;
+4. `PostProcess` — stacking;
+5. `IApplicableToBeatmap` — **the TimeFadeIn adjustment under HD**.
 
-То есть HD-поправка применяется после того, как preempt уже посчитан, а отражение
-HR — до стакинга. В порте отражение вызывается ещё раньше, до расчёта геометрии,
-и это эквивалентно: отражение изометрично, длина пути и все времена от него
-не меняются.
+So the HD adjustment is applied after preempt has already been computed, and
+the HR reflection before stacking. The port performs the reflection earlier
+still, before geometry is computed, and that is equivalent: the reflection is
+an isometry, so path length and all timings are unaffected.
 
-**Две разные accuracy.** Под lazer точность считается не только по кругам:
-хвосты слайдеров входят с весом 3, тики — с весом 0.6.
+**Two different accuracies.** Under lazer accuracy is not counted over hit
+circles alone: slider tails enter with weight 3, ticks with weight 0.6.
 
 ```
-acc = (6*300 + 2*100 + 50 + 3*хвосты + 0.6*тики) / (6*n + 3*слайдеры + 0.6*тики)
+acc = (6*300 + 2*100 + 50 + 3*tails + 0.6*ticks) / (6*n + 3*sliders + 0.6*ticks)
 ```
 
-При FC хвосты и тики собраны полностью, поэтому они тянут точность вверх.
-osu-tools в ключе `-a` принимает «сырую» точность по кругам, а игрок видит уже
-итоговую. Библиотека по умолчанию понимает accuracy так, как её видит игрок,
-и переводит во внутреннюю; флаг `raw_accuracy=True` переключает на поведение
-osu-tools и нужен для сверки с эталоном.
+On an FC the tails and ticks are all collected, so they pull the accuracy up.
+osu-tools takes the "raw" accuracy over circles in its `-a` option, while the
+player sees the final one. The library reads accuracy the way the player sees
+it by default and converts it internally; the `raw_accuracy=True` flag switches
+to osu-tools' behaviour and is needed for comparing against the reference.
 
-### Найденное проверкой вне обучающей выборки
+### Found by testing outside the training sample
 
-Порт был объявлен готовым: 13 карт, 300 комбинаций, pp совпадал бит в бит.
-Прогон на четырёх **реальных картах, ни разу не участвовавших в отладке**,
-нашёл две настоящие ошибки. Обе — того же класса, что и все предыдущие:
-не там поставленное округление.
+The port had been declared finished: 13 beatmaps, 300 combinations, pp matching
+bit for bit. A run over four **real beatmaps that had never taken part in
+debugging** found two genuine bugs. Both of the same class as all the previous
+ones: rounding in the wrong place.
 
-**Число точек аппроксимации дуги считалось в double.** В C# написано
-`1f - (0.1f / Radius)`: и допуск, и радиус — `float`, поэтому деление
-и вычитание идут во float32 и только потом расширяются для `Math.Acos`.
+**The number of arc approximation points was computed in double.** C# says
+`1f - (0.1f / Radius)`: both the tolerance and the radius are `float`, so the
+division and the subtraction run in float32 and only then widen for
+`Math.Acos`.
 
-| | 1 − tol/r | точек |
+| | 1 − tol/r | points |
 |---|---|---|
-| в double (неверно) | `0.998791740951879` | 12 |
-| во float32 (верно) | `0.9987917542457581` | 13 |
+| in double (wrong) | `0.998791740951879` | 12 |
+| in float32 (right) | `0.9987917542457581` | 13 |
 
-Лишняя точка меняет форму ломаной и сдвигает конец пути. Расхождение звёзд
-1e-7 — на три порядка выше всего, что давали известные отклонения.
+The extra point changes the shape of the polyline and shifts the end of the
+path. A star rating discrepancy of 1e-7 — three orders of magnitude above
+anything the known deviations produced.
 
-**Смещение стака округлялось один раз вместо двух.** В C#
-`new Vector2(StackHeight * Scale * -6.4f)` — это два последовательных
-умножения во float32, а не одно выражение в double. Вылезает только при
-крупном масштабе, то есть под EZ: расхождение 1e-10 на двух картах из четырёх.
+**The stack offset was rounded once instead of twice.** In C#
+`new Vector2(StackHeight * Scale * -6.4f)` is two consecutive float32
+multiplications, not one expression in double. It only surfaces at a large
+scale, i.e. under EZ: a 1e-10 discrepancy on two beatmaps out of four.
 
-**Вывод про метод.** Ни одна из этих ошибок не нашлась бы добавлением ещё
-одного мода или ещё одной синтетической карты: обе требуют конкретной геометрии
-(дуга нужного радиуса, стек при определённом CS). Тестовый набор ppy подобран
-под их собственные краевые случаи, а не под чужой порт. Реальные карты остались
-в наборе навсегда — `REAL_WORLD_BEATMAPS` в `tests/reference.py`.
+**The lesson about method.** Neither bug would have been found by adding one
+more mod or one more synthetic beatmap: both require specific geometry (an arc
+of the right radius, a stack at a particular CS). ppy's test set is chosen for
+their own edge cases, not for somebody else's port. The real beatmaps stayed in
+the set for good — `REAL_WORLD_BEATMAPS` in `tests/reference.py`.
 
-Заодно выяснилось, что гейты фаз 2 и 3 собирали карту сами и успели разойтись
-с боевым расчётом: поправки HR и EZ к CS/AR/OD применялись только в одном
-из двух мест. Подготовка вынесена в общую `prepare_beatmap`.
+It also turned out that the phase 2 and 3 gates were assembling the beatmap
+themselves and had drifted from the production path: the HR and EZ adjustments
+to CS/AR/OD were applied in only one of the two places. Preparation was
+extracted into a shared `prepare_beatmap`.
 
-### Найденное на реальном корпусе (231 тысяча карт)
+### Found on the real corpus (231 thousand beatmaps)
 
-Прогон случайных выборок из полного корпуса карт нашёл ещё четыре ошибки —
-после того как порт уже проходил 540 комбинаций бит в бит.
+Running random samples from the full beatmap corpus found four more bugs —
+after the port already passed 540 combinations bit for bit.
 
-**Catmull-сплайнов не было ни в одной тестовой карте.** Ни одного сегмента
-на 17 карт: только Linear, PerfectCurve и BSpline. В `_catmull_find_point`
-округление стояло только на произведениях, а в C# выражение целиком состоит
-из float-операндов, и округляется **каждая** бинарная операция.
+**Not one test beatmap contained a Catmull spline.** Not a single segment
+across 17 beatmaps: only Linear, PerfectCurve and BSpline. In
+`_catmull_find_point` the rounding was only on the products, whereas in C# the
+whole expression consists of float operands and **every** binary operation is
+rounded.
 
-**Позиция спиннера берётся не из файла.** `createSpinner(new Vector2(512, 384) / 2, ...)`
-всегда ставит его в центр поля. У части старых карт в файле записаны другие
-координаты. В тестовых картах спиннеры и так стояли в центре.
+**A spinner's position does not come from the file.**
+`createSpinner(new Vector2(512, 384) / 2, ...)` always places it at the centre
+of the playfield. Some older beatmaps have different coordinates written in the
+file. In the test beatmaps the spinners happened to sit at the centre anyway.
 
-**Деление на ноль на слайдере нулевой длительности.** `ZeroDivisionError` вместо
-`Infinity`. Заведена `c_div` с семантикой C#; дальше по цепочке бесконечность
-превращается в NaN, а `PositionAt(NaN)` возвращает первую точку пути — итог совпадает.
+**Division by zero on a zero-duration slider.** `ZeroDivisionError` instead of
+`Infinity`. `c_div` was added with C#'s semantics; further down the chain the
+infinity turns into a NaN, and `PositionAt(NaN)` returns the first point of the
+path — the result matches.
 
-**Оракул был настроен неверно для старых карт.** Самая поучительная из четырёх.
-osu-tools в своём `Program.cs` вызывает
+**The oracle was configured wrongly for old beatmaps.** The most instructive of
+the four. osu-tools calls, in its own `Program.cs`,
 
 ```csharp
 LegacyDifficultyCalculatorBeatmapDecoder.Register();
 ```
 
-Этот декодер отличается тем, что `ApplyOffsets = false`: карты формата ниже v5
-**не** сдвигаются на 24 мс. Мой дамп имел собственный `Main` и регистрацию
-пропускал, поэтому сдвиг применял — и порт был подогнан под неверный эталон.
+That decoder differs in having `ApplyOffsets = false`: beatmaps in formats
+below v5 are **not** shifted by 24 ms. My dump had its own `Main` and skipped
+the registration, so it did apply the shift — and the port had been fitted to a
+wrong reference.
 
-Симптом был очень узким: расходился только `flashlight_difficulty`. Равномерный
-сдвиг времён не меняет ни дельт, ни дистанций, ни углов, но `Flashlight` —
-единственный скилл, чьи секции привязаны к абсолютным кратным 400 мс. Объекты
-перераспределяются по секциям, и меняются пики.
+The symptom was extremely narrow: only `flashlight_difficulty` diverged. A
+uniform time shift changes neither deltas nor distances nor angles, but
+`Flashlight` is the only skill whose sections are pinned to absolute multiples
+of 400 ms. Objects get redistributed across sections, and the peaks change.
 
-Дожило это до реального корпуса потому, что единственная карта формата v3
-(`old-stacking`) лежала в `GEOMETRY_EDGE_CASES`, а гейт фазы 5 — тот, что
-сверяется с `simulate`, — этот список не перебирает. Дамп и `simulate`
-расходились между собой, и никакой гейт этого не проверял. Теперь карта
-в основном наборе, и оба пути оракула сверяются друг с другом.
+This survived to the real corpus because the single v3-format beatmap
+(`old-stacking`) sat in `GEOMETRY_EDGE_CASES`, and the phase 5 gate — the one
+comparing against `simulate` — does not iterate that list. The dump and
+`simulate` disagreed with each other, and no gate checked that. The beatmap is
+in the main set now, and both oracle paths are compared against each other.
 
-### Найденное аудитом кода (28.07.2026)
+### Found by a code audit (2026-07-28)
 
-Сплошное чтение порта против запиненного C# нашло **девять** расхождений — все
-в декодере, ни одного в эвалуаторах, скиллах или pp-формуле. Ни одно не
-проявлялось ни на 17 тестовых картах, ни на 500 картах корпуса: все требуют
-входов, которых там просто нет. Каждое подтверждено синтетической картой; все
-девять лежат в `tests/edge_cases/` и проверяются гейтом фазы 6.
+Reading the whole port against the pinned C# found **nine** discrepancies — all
+in the decoder, none in the evaluators, skills or the pp formula. Not one
+showed up on the 17 test beatmaps or on 500 corpus beatmaps: they all require
+inputs that simply are not there. Each is confirmed by a synthetic beatmap; all
+nine live in `tests/edge_cases/` and are checked by the phase 6 gate.
 
-Общая причина у первых четырёх одна: **osu! зажимает значения, а не доверяет им.**
+The first four share one cause: **osu! clamps values rather than trusting
+them.**
 
-| Что | Где | Цена ошибки |
+| What | Where | Cost of the bug |
 |---|---|---|
-| Настройки сложности не зажимались в допустимые диапазоны (`applyDifficultyRestrictions`) | HP/CS/OD/AR в [0,10], SliderMultiplier в [0.4,3.6], TickRate в [0.5,8] | CS=12 давал звёзды **впятеро выше** |
-| `beatLength` не зажимался в [6, 60000] (`BeatLengthBindable`) | `TimingPoint` | скорость слайдера втрое выше; при `beatLength=0` — падение |
-| `SliderVelocity` не зажимался в [0.1, 10] (`SliderVelocityBindable`) | `DifficultyPoint` | другое число тиков, то есть другое MaxCombo |
-| Координаты и длина не проверялись на предел `Parsing.MAX_COORDINATE_VALUE` | `_parse_float` | порт считал карты, которые osu! отвергает |
+| Difficulty settings were not clamped to valid ranges (`applyDifficultyRestrictions`) | HP/CS/OD/AR in [0,10], SliderMultiplier in [0.4,3.6], TickRate in [0.5,8] | CS=12 gave a star rating **five times** higher |
+| `beatLength` was not clamped to [6, 60000] (`BeatLengthBindable`) | `TimingPoint` | slider velocity three times higher; a crash at `beatLength=0` |
+| `SliderVelocity` was not clamped to [0.1, 10] (`SliderVelocityBindable`) | `DifficultyPoint` | a different tick count, hence a different MaxCombo |
+| Coordinates and length were not checked against `Parsing.MAX_COORDINATE_VALUE` | `_parse_float` | the port computed beatmaps osu! rejects |
 
-Остальные пять — каждая своя:
+The other five each stand alone:
 
-**Лишний `f32` в множителе тиков.** В C# написано `1f / SliderVelocity`, и
-комментарий в порте уверенно объяснял, что это деление во float32. Но
-`SliderVelocity` объявлен как `double`, поэтому единица расширяется, и деление
-идёт в double. Ровно та же ловушка, что и в остальном порте, только в обратную
-сторону: здесь округления не хватало, а его дописали.
+**A spurious `f32` in the tick multiplier.** C# says `1f / SliderVelocity`, and
+a comment in the port confidently explained that this was a float32 division.
+But `SliderVelocity` is declared `double`, so the one widens and the division
+runs in double. Exactly the same trap as everywhere else in the port, only
+inverted: here rounding was missing and got added.
 
-**Старый стакинг брал не тот конец слайдера.** C# берёт буквально
-`Path.PositionAt(1)`, а порт подставлял `EndPosition`, то есть
-`PositionAt(SpanCount % 2)`. У слайдера с чётным числом пролётов это
-противоположные концы пути.
+**Old-style stacking took the wrong end of the slider.** C# takes literally
+`Path.PositionAt(1)`, while the port substituted `EndPosition`, i.e.
+`PositionAt(SpanCount % 2)`. On a slider with an even number of spans those are
+opposite ends of the path.
 
-**Позиция объекта не усекалась до целых.** До формата v128 усекаются и точки
-пути, и позиция самого объекта. Порт усекал только первые.
+**An object's position was not truncated to an integer.** Before format v128
+both the path points and the object's own position are truncated. The port
+truncated only the former.
 
-**Разный фолбэк у двух видов точек.** До первой точки `TimingPointAt` возвращает
-первую же точку, а `DifficultyPointAt` — умолчание со скоростью 1. Порт
-использовал общий помощник и для обоих возвращал первую точку.
+**The two kinds of control point have different fallbacks.** Before the first
+point, `TimingPointAt` returns that very first point while `DifficultyPointAt`
+returns a default with velocity 1. The port used a shared helper and returned
+the first point for both.
 
-**Приоритет одновременных точек.** Самое неочевидное. `addControlPoint` копит
-точки, пока не сменится время, и сбрасывает группу с конца списка, оставляя
-для каждого типа первую встреченную. Красные строки кладутся в начало списка,
-зелёные — в конец, откуда следует: темп берётся из **первой красной** строки
-группы, а скорость слайдера — из **последней зелёной**, и лишь при её отсутствии
-из первой красной. То есть зелёная линия побеждает красную с тем же временем,
-даже если записана в файле раньше.
+**Priority among simultaneous points.** The least obvious one.
+`addControlPoint` accumulates points until the time changes, then flushes the
+group from the end of the list, keeping the first one encountered of each type.
+Red lines are put at the front of the list and green ones at the back, from
+which it follows: the tempo comes from the **first red** line of the group and
+the slider velocity from the **last green** one, falling back to the first red
+only in its absence. That is, a green line beats a red one with the same time
+even if it is written earlier in the file.
 
-**Десятую нашла не читка, а свежее зерно выборки.** После всех девяти правок
-прогон корпуса с новым зерном дал расхождение `1.07e-09` на карте 35995 —
-на три порядка выше известного ulp-остатка, то есть настоящая ошибка. Причина:
+**The tenth was found not by reading but by a fresh sample seed.** After all
+nine fixes, a corpus run on a new seed produced a `1.07e-09` discrepancy on
+beatmap 35995 — three orders of magnitude above the known ulp residue, i.e. a
+real bug. The cause:
 
 ```csharp
 public override Vector2 StackOffset => Vector2.Zero;   // Spinner.cs
 ```
 
-Спиннер стеком не сдвигается, а порт применял к нему общую формулу. Условие
-редкое вдвойне: новый стакинг спиннеры пропускает, поэтому нужен формат ниже
-v6, где `applyStackingOld` выдаёт спиннеру ненулевой `StackHeight` вслед за
-слайдером; и позиция спиннера должна кем-то читаться — эвалуаторы `Aim` берут
-её как позицию соседа при подсчёте перекрытия.
+A spinner is not displaced by stacking, and the port applied the general
+formula to it. The condition is doubly rare: new-style stacking skips spinners,
+so a format below v6 is needed, where `applyStackingOld` gives the spinner a
+non-zero `StackHeight` following a slider; and the spinner's position has to be
+read by somebody — the `Aim` evaluators take it as a neighbour's position when
+computing overlap.
 
-Синтетическую пробу под неё пришлось строить дважды. Первая воспроизводила
-стек (`StackHeight = -1`), но звёзды не меняла: `_calculate_overlap_factor`
-насыщается в единицу для всего, что ближе радиуса, а соседи стояли вплотную.
-Пробу спасло только то, что я проверил её на чувствительность — временно вернул
-ошибку и убедился, что проба краснеет. **Проба, не проверенная на отрицательном
-результате, ничего не гарантирует**; вторая версия ставит соседей на расстояние
-порядка радиуса, где фактор перекрытия чувствителен, и ловит расхождение `4.9e-05`.
+The synthetic probe for it had to be built twice. The first reproduced the
+stack (`StackHeight = -1`) but did not change the star rating:
+`_calculate_overlap_factor` saturates to one for anything closer than the
+radius, and the neighbours were right on top of each other. The probe was saved
+only because I tested it for sensitivity — temporarily reintroduced the bug and
+confirmed the probe went red. **A probe not checked against a negative result
+guarantees nothing**; the second version places the neighbours at a distance on
+the order of the radius, where the overlap factor is sensitive, and catches a
+`4.9e-05` discrepancy.
 
-**Одиннадцатая закрыла «известный остаток».** После правки спиннера сверка
-атрибутов на сорока картах показала одну с расхождением `5.6e-13` в
-`aim_difficulty` — тысячи ulp, то есть не шум. Послойная сверка привела в
-`SnapAimEvaluator`, в редкую ветку «движение туда-обратно через одну точку»:
+**The eleventh closed the "known residue".** After the spinner fix, comparing
+attributes across forty beatmaps showed one with a `5.6e-13` discrepancy in
+`aim_difficulty` — thousands of ulp, so not noise. A layered comparison led to
+`SnapAimEvaluator`, into the rare "back-and-forth through one point" branch:
 
 ```csharp
 float distance = (last2BaseObject.StackedPosition - lastBaseObject.StackedPosition).Length;
@@ -432,58 +469,61 @@ if (distance < 1)
     wideAngleBonus *= 1 - 0.55 * (1 - distance);
 ```
 
-`distance` объявлен как `float`, поэтому скобка `(1 - distance)` считается
-во **float32**, и лишь умножение на `0.55` уходит в double. Порт считал скобку
-целиком в double. Ветка требует, чтобы два объекта через один отстояли меньше
-чем на пиксель, а угол при этом был широким, — оттого и не попадалась.
+`distance` is declared `float`, so the bracket `(1 - distance)` is computed in
+**float32** and only the multiplication by `0.55` goes to double. The port
+computed the whole bracket in double. The branch requires two objects one apart
+to be less than a pixel apart while the angle is wide — hence it never came up.
 
-Это последняя из ловушек «где C# округляет», и она же закрыла остаток,
-который считался неустранимым: прогон 500 карт корпуса на исходном зерне
-теперь даёт **0 расхождений** при худшем отклонении `2.1e-16` вместо прежних
-пяти при `1.6e-12`. Разбор ниже («Остаток Reading») по-прежнему верен на уровне
-эвалуатора, но на итоговые pp и звёзды остаток больше не выходит.
+This is the last of the "where does C# round" pitfalls, and it also closed a
+residue that had been considered irreducible: a 500-beatmap corpus run on the
+original seed now gives **0 mismatches** at a worst deviation of `2.1e-16`,
+instead of the previous five at `1.6e-12`. The analysis below ("The Reading
+residue") still holds at the evaluator level, but the residue no longer reaches
+the final pp or star rating.
 
-**Двенадцатую нашла выборка на две тысячи карт** — и она первая, что лежит
-не в расчёте сложности, а в раскладке попаданий. Симптом отличался от всех
-предыдущих: звёзды совпадали **точно**, а pp расходились на 0.4%. Две карты
-из шести тысяч комбинаций, обе только на 95%.
+**The twelfth was found by a two-thousand-beatmap sample** — and it is the
+first that lives not in the difficulty calculation but in the hit breakdown.
+The symptom differed from all the previous ones: the star rating matched
+**exactly** while pp diverged by 0.4%. Two beatmaps out of six thousand
+combinations, both only at 95%.
 
-Причина в `OsuSimulateCommand.generateHitResults`:
+The cause is in `OsuSimulateCommand.generateHitResults`:
 
 ```csharp
 int relevantResultCount = totalResultCount - countMiss;
 double relevantAccuracy = accuracy * totalResultCount / relevantResultCount;
 ```
 
-При FC промахов нет, знаменатель равен числителю, и порт этот круг опускал как
-тождество. В плавающей точке он не тождество: `0.95 * 543 / 543` даёт
-`0.9500000000000001`. Обычно это ничего не решает, но на 543 объектах оценка
-числа соток попадает **ровно** на `40.5` — и разницы в последнем бите хватает,
-чтобы округление к чётному ушло с 40 на 41. Одна сотка превращается
-в пятидесятку, и это уже 0.4% pp.
+On an FC there are no misses, the denominator equals the numerator, and the
+port skipped that round trip as an identity. In floating point it is not an
+identity: `0.95 * 543 / 543` gives `0.9500000000000001`. Usually that decides
+nothing, but on 543 objects the estimated number of 100s lands **exactly** on
+`40.5` — and the last-bit difference is enough to send banker's rounding from
+40 to 41. One 100 turns into a 50, and that is already 0.4% pp.
 
-Мораль та же, что и с `Duration = EndTime - StartTime`: **алгебраически лишнюю
-операцию нельзя сокращать**, если эталон её выполняет. Проба построена на карте
-из 21 объекта — минимальном числе, при котором оценка снова попадает ровно
-на половину (4.5 при 85%).
+The moral is the same as with `Duration = EndTime - StartTime`: **an
+algebraically redundant operation must not be elided** if the reference
+performs it. The probe is built on a 21-object beatmap — the smallest count at
+which the estimate again lands exactly on a half (4.5 at 85%).
 
-Отдельно: `_index_of_distance` использовал `bisect_left`, а докстринг оправдывал
-это тем, что накопленные длины строго возрастают. Они не строго возрастают —
-у совпадающих точек пути длина повторяется, а это обычное дело для Catmull.
-Эксперимент показал, что на остаточных картах корпуса результат не менялся,
-но обоснование было неверным, и рядом, в `_add_in_place`, .NET-овский
-`BinarySearch` уже был воспроизведён честно. Теперь он воспроизведён в обоих
-местах.
+Separately: `_index_of_distance` used `bisect_left`, and its docstring
+justified that by the cumulative lengths being strictly increasing. They are
+not strictly increasing — the length repeats at coincident path points, which
+is routine for Catmull. Experiment showed the result did not change on the
+remaining corpus beatmaps, but the justification was wrong, and right next
+door, in `_add_in_place`, .NET's `BinarySearch` had already been reproduced
+honestly. Now it is reproduced in both places.
 
-### Второй аудит (28.07.2026): вырожденные входы
+### Second audit (2026-07-28): degenerate inputs
 
-Первый аудит читал код против C# и смотрел на обычные карты. Второй прошёл
-по границе охвата: 31 синтетическая карта на входы, которых нет ни в гейтах,
-ни в корпусе. Нашлось три расхождения — все за пределами того, что встречается
-на практике (просмотр 12 952 std-карт корпуса даёт **ноль** попаданий по каждому
-из трёх), но каждое ломает расчёт полностью, а не в младших разрядах.
+The first audit read the code against C# and looked at ordinary beatmaps. The
+second walked the boundary of the scope: 31 synthetic beatmaps for inputs that
+appear neither in the gates nor in the corpus. Three discrepancies turned up —
+all beyond what occurs in practice (scanning 12 952 std beatmaps of the corpus
+gives **zero** hits for each of the three), but each breaks the calculation
+outright rather than in the low-order digits.
 
-**Тринадцатая. Слайдер нулевой длины сохранял повторы.**
+**Thirteenth. A zero-length slider kept its repeats.**
 
 ```csharp
 if (Precision.AlmostEquals(path.Distance, 0))
@@ -493,280 +533,509 @@ if (Precision.AlmostEquals(path.Distance, 0))
 }
 ```
 
-Это не оптимизация, а защита от эксплойта: в комментарии ppy назван ранкед-сет
-`1258033`, где такой слайдер накручивал комбо — в stable его повторы создавались
-объектами, но никогда не судились. MaxCombo завышался (13 против 10 на пробе,
-59 против 10 при полусотне повторов), а лишние `SliderRepeat` попадали ещё
-и в счёт тиков, через который считается lazer-точность.
+This is not an optimisation but a guard against an exploit: ppy's comment names
+the ranked set `1258033`, where such a slider inflated combo — in stable its
+repeats were created as objects but never judged. MaxCombo came out too high
+(13 against 10 on the probe, 59 against 10 with fifty repeats), and the extra
+`SliderRepeat`s also landed in the tick count that lazer accuracy is computed
+from.
 
-Порог `Precision.AlmostEquals` пришлось выяснять экспериментом, потому что
-исходников osu-framework в пине нет: слайдер длиной ровно `1e-7` оракул считает
-нулевым, длиной `1.1e-7` — уже нет. Значит сравнение **нестрогое**, `<=`. Заодно
-исправлено то же сравнение в `SliderPath._interpolate_vertices`, где стояло `<`.
+The `Precision.AlmostEquals` threshold had to be established by experiment,
+because osu-framework's sources are not in the pin: the oracle treats a slider
+of length exactly `1e-7` as zero, and one of `1.1e-7` as not. So the comparison
+is **non-strict**, `<=`. The same comparison was fixed in
+`SliderPath._interpolate_vertices`, where it read `<`.
 
-В C# сброс делается при разборе, но там же строится и путь; у нас путь
-появляется в `apply_defaults`, поэтому сброс живёт там.
+In C# the reset happens during parsing, but the path is built there too; here
+the path appears in `apply_defaults`, so the reset lives there.
 
-**Четырнадцатая. Карта без единой скоростной ноты роняла расчёт.**
+**Fourteenth. A beatmap without a single speed note crashed the calculation.**
 
-`OsuPerformanceCalculator.computeSpeedValue` делит на `SpeedDifficulty`:
+`OsuPerformanceCalculator.computeSpeedValue` divides by `SpeedDifficulty`:
 
 ```csharp
 double effectiveHitWindow = 20 * DiffUtils.Pow(4 / attributes.SpeedDifficulty, 0.35);
 ```
 
-При нулевой сложности C# получает бесконечное окно, `Erf(inf) = 1`, множитель
-без эффекта — и итог честный ноль. Python поднимал `ZeroDivisionError`. Хватает
-карты из одного объекта или из одних спиннеров; оракул на обеих отвечает
-осмысленно (одиночный круг — `pp = 11.4677`, не ноль). Лечится `c_div`.
+At zero difficulty C# gets an infinite window, `Erf(inf) = 1`, a multiplier with
+no effect — and an honest zero as the result. Python raised
+`ZeroDivisionError`. A beatmap of one object or of spinners only is enough; the
+oracle answers sensibly on both (a lone circle gives `pp = 11.4677`, not zero).
+Cured by `c_div`.
 
-Тот же класс, что и `_progress_to_distance` с NaN: **где C# продолжает
-с бесконечностью, Python падает.** Стоит проверять каждое деление, знаменатель
-которого может обратиться в ноль на вырожденной карте.
+Same class as `_progress_to_distance` with NaN: **where C# continues with an
+infinity, Python falls over.** It is worth checking every division whose
+denominator can become zero on a degenerate beatmap.
 
-**Пятнадцатая. Координаты усекались до целого через double, а не float32.**
+**Fifteenth. Coordinates were truncated to integers through a double rather
+than a float32.**
 
 ```csharp
 : new Vector2((int)Parsing.ParseFloat(split[0], ...), (int)Parsing.ParseFloat(split[1], ...));
 ```
 
-`ParseFloat` возвращает `float`, и усекается именно он. Порт парсил в double
-и усекал его. Для `255.999995` это 255 вместо 256: значение ближе одного ulp
-к целому округляется до `256.0f` ещё при разборе. Проба на восьми кругах даёт
-звёзды `1.850948` против `1.850359` — расхождение `3.2e-4`, не младшие разряды.
-Касается всех форматов ниже v128, то есть практически всех карт.
+`ParseFloat` returns a `float`, and that is what gets truncated. The port
+parsed into a double and truncated that. For `255.999995` that is 255 instead
+of 256: a value within one ulp of an integer is rounded to `256.0f` during
+parsing already. A probe on eight circles gives a star rating of `1.850948`
+against `1.850359` — a `3.2e-4` discrepancy, not low-order digits. It affects
+every format below v128, i.e. practically every beatmap.
 
-**Что ещё поправлено тем же заходом (не расхождения):**
+**Also fixed in the same pass (not discrepancies):**
 
-* `classifiers` в `pyproject.toml` стоял после заголовка
-  `[project.optional-dependencies]` и потому попал внутрь него: у пакета не было
-  ни одного классификатора, зато был фиктивный экстра `[classifiers]`, при
-  установке которого pip пошёл бы искать пакет с именем `Programming Language
-  :: Python :: 3.11`. **В TOML всё, что относится к секции, обязано стоять выше
-  первого вложенного заголовка.**
-* `BeatmapParseError` не экспортировался из корня пакета, хотя это одно из двух
-  исключений публичного API (`sweep.py` тянул его из внутреннего модуля).
-* `tools/sweep.py` не ловил падения внутри `simulator.pp` — прогон на тысячах
-  карт обрывался бы целиком вместо записи расхождения. Ровно этот случай и был
-  бы у четырнадцатой находки.
-* `processor._end_position` слово в слово повторял свойство `end_position`;
-  в C# на этих местах стоит само свойство.
-* Ветка на нулевую скорость в `Slider.end_time` стала недостижимой после
-  клампов декодера — снята вместе с ней и импорт `math`.
-* `apply_to_difficulty` работал через `dict[str, float]`: заменён на `Difficulty`,
-  из `prepare_beatmap` ушли восемь строк упаковки и распаковки.
-* Три `assert ... is not None` для сужения типа сняты: под `-O` они исчезают,
-  а обоснование лучше выражается структурой кода и комментарием.
+* `classifiers` in `pyproject.toml` sat after the
+  `[project.optional-dependencies]` heading and therefore ended up inside it:
+  the package had no classifiers at all, but did have a bogus `[classifiers]`
+  extra, installing which would send pip looking for a package named
+  `Programming Language :: Python :: 3.11`. **In TOML, everything belonging to
+  a section must sit above the first nested heading.**
+* `BeatmapParseError` was not exported from the package root, although it is
+  one of the two public API exceptions (`sweep.py` pulled it from an internal
+  module).
+* `tools/sweep.py` did not catch failures inside `simulator.pp` — a run over
+  thousands of beatmaps would abort entirely instead of recording a mismatch.
+  That is exactly what the fourteenth finding would have caused.
+* `processor._end_position` repeated the `end_position` property word for word;
+  C# has the property itself in those places.
+* The zero-velocity branch in `Slider.end_time` became unreachable after the
+  decoder clamps — removed, along with the `math` import.
+* `apply_to_difficulty` worked through a `dict[str, float]`: replaced with
+  `Difficulty`, which removed eight lines of packing and unpacking from
+  `prepare_beatmap`.
+* Three `assert ... is not None` narrowing statements were dropped: they vanish
+  under `-O`, and the justification is better expressed by the structure of the
+  code and a comment.
 
-### Шестнадцатая: битая строка отвергала всю карту
+### Sixteenth: a broken line rejected the whole beatmap
 
-Найдена сверкой на 5000 картах — и не расхождением, а строкой сводки
-`'не разобралась': 1`, которой в прежних прогонах не было.
+Found by a comparison over 5000 beatmaps — and not by a mismatch but by the
+summary line `'failed to parse': 1`, which had not appeared in earlier runs.
 
-`LegacyDecoder.ParseStreamInto` оборачивает разбор **каждой строки**:
+`LegacyDecoder.ParseStreamInto` wraps the parsing of **each line**:
 
 ```csharp
 try { ParseLine(output, section, line, isPrimaryStream); }
 catch (Exception e) { Logger.Log($"Failed to process line \"{line}\" into \"{output}\": {e.Message}"); }
 ```
 
-То есть негодная строка пропускается, а разбор идёт дальше. Порт же поднимал
-`BeatmapParseError` и отказывался от карты целиком. На `2052199` это шестнадцать
-слайдеров с длиной `141975` при пределе `131072`: осу теряет шестнадцать
-объектов из 826 и выдаёт 6.126★ / 392 pp, а порт не выдавал ничего.
+That is, an unusable line is skipped and parsing continues. The port, however,
+raised `BeatmapParseError` and gave up on the beatmap entirely. On `2052199`
+that is sixteen sliders of length `141975` against a limit of `131072`: osu!
+loses sixteen objects out of 826 and produces 6.126★ / 392 pp, while the port
+produced nothing.
 
-Фатальными остались ровно две вещи, и обе проверяются вне цикла: отсутствие
-строки формата (её читает `Decoder.GetDecoder`, снаружи try) и режим не
-osu!standard — это уже наш охват, а не поведение C#.
+Exactly two things remain fatal, and both are checked outside the loop: a
+missing format line (read by `Decoder.GetDecoder`, outside the try) and a
+ruleset other than osu!standard — which is our scope, not C#'s behaviour.
 
-Порядок внутри `handleTimingPoint` проверен отдельно: `throw` на NaN стоит
-**до** первого `addControlPoint`, поэтому пропуск строки ничего не добавляет
-в накопленную группу — что и делает наш `continue`.
+The ordering inside `handleTimingPoint` was checked separately: the `throw` on
+NaN comes **before** the first `addControlPoint`, so skipping a line adds
+nothing to the accumulated group — which is what our `continue` does.
 
-Добавлено поле `Beatmap.unparsed_lines`. Молча терять объекты — ровно тот
-режим отказа, против которого весь этот проект: счётчик не делает результат
-вернее, но не даёт битому файлу выглядеть целым.
+A `Beatmap.unparsed_lines` field was added. Silently losing objects is exactly
+the failure mode this whole project stands against: a counter does not make the
+result more correct, but it stops a broken file from looking intact.
 
-**Отдельно — про то, почему находка ждала так долго.** `sweep.py` учитывал отказ
-разбора как *пропуск*, а не как несовпадение, и три прежних прогона (500, 400,
-2000 карт) просто не встретили такой карты, так что счётчик всё время стоял
-на нуле и в глаза не бросался. Теперь при отказе разбора sweep спрашивает
-оракул: если тот карту принимает, это расхождение. **Категория «пропущено»
-в любом инструменте сверки обязана быть либо пустой, либо объяснённой** —
-иначе она прячет ровно то, что ищешь.
+**Separately, on why the finding waited so long.** `sweep.py` counted a parse
+failure as a *skip* rather than a mismatch, and three earlier runs (500, 400,
+2000 beatmaps) simply never met such a beatmap, so the counter sat at zero the
+whole time and never caught the eye. Now, on a parse failure, sweep asks the
+oracle: if the oracle accepts the beatmap, that is a mismatch. **A "skipped"
+category in any comparison tool must be either empty or explained** — otherwise
+it hides exactly what you are looking for.
 
-Проверка правки не требовала повторять весь корпус: изменение — чистое
-расширение, карты без битых строк оно не трогает по построению. Проверены все
-карты выборки, у которых `unparsed_lines > 0` (две на 20 000 файлов), на четырёх
-наборах модов и трёх точностях — 24 комбинации, расхождений нет.
+Verifying the fix did not require repeating the whole corpus: the change is a
+pure widening and by construction does not touch beatmaps without broken lines.
+Every beatmap in the sample with `unparsed_lines > 0` (two out of 20 000 files)
+was checked across four mod sets and three accuracies — 24 combinations, no
+mismatches.
 
-### Прогон всего корпуса без оракула (231 778 файлов)
+### A full corpus run without the oracle (231 778 files)
 
-Случайные выборки проверяют, сходятся ли числа. Сплошной прогон отвечает
-на другое: **что порт отказывается разбирать и где он падает там, где C#
-продолжает.** Оракул для этого не нужен, поэтому он и выполним целиком —
-70 мс на карту, шесть процессов, 45 минут.
+Random samples check whether the numbers agree. A full scan answers something
+else: **what the port refuses to parse, and where it falls over while C#
+carries on.** The oracle is not needed for that, which is why it is feasible in
+full — 70 ms per beatmap, six processes, 45 minutes.
 
-Первый прогон: 150 795 посчитано, 80 983 не std, аномалий **две**. За этими
-двумя строками нашлись **три** ошибки — одна аномалия в сводке вполне может
-прятать несколько разных дефектов.
+First run: 150 795 computed, 80 983 not std, **two** anomalies. Behind those two
+lines were **three** bugs — one line in a summary can easily hide several
+distinct defects.
 
-Отдельно про то, как я чуть не потерял девятнадцатую. Первую аномалию —
-`191276.osu` «не найдена строка osu file format vN» — я записал в законные
-отказы, не проверив. Проверка заняла одну команду и показала обратное: оракул
-карту принимает. **Категорию «законный отказ» нельзя присваивать по виду
-сообщения; её надо подтверждать оракулом ровно так же, как расхождение.**
+Separately, on how I nearly lost the nineteenth. The first anomaly —
+`191276.osu`, "no osu file format vN line found" — I filed as a legitimate
+rejection without checking. Checking took one command and showed the opposite:
+the oracle accepts the beatmap. **The category "legitimate rejection" cannot be
+assigned by the look of the message; it has to be confirmed by the oracle just
+like a mismatch.**
 
-Повторный прогон на исправленном коде: 231 780 файлов, 150 796 посчитано,
-80 984 не std, аномалий ноль, 30 карт разобраны с пропуском битых строк.
+Second run on the fixed code: 231 780 files, 150 796 computed, 80 984 not std,
+zero anomalies, 30 beatmaps parsed while skipping broken lines.
 
-**Семнадцатая. Дуга радиусом в миллионы делила на ноль.**
+**Seventeenth. An arc of a radius in the millions divided by zero.**
 
 ```csharp
 int subPoints = (2f * Radius <= 0.1f) ? 2 : Math.Max(2, (int)Math.Ceiling(ThetaRange / (2.0 * Math.Acos(1f - (0.1f / Radius)))));
 ```
 
-При радиусе больше ~3.4 млн `0.1f/Radius` проваливается ниже ulp единицы
-(2⁻²⁴ ≈ 5.96e-8), `1f - …` даёт ровно `1.0f`, а `Acos(1)` — ноль.
+At a radius above ~3.4 million, `0.1f/Radius` falls below the ulp of one
+(2⁻²⁴ ≈ 5.96e-8), `1f - …` yields exactly `1.0f`, and `Acos(1)` is zero.
 
-C# делит на ноль, получает бесконечность, и `(int)` её **насыщает**
-в `int.MaxValue`; порог в 1000 точек затем отправляет дугу в безье. Это
-поведение .NET Core 3.0+: приведение float→int стало насыщающим вместо
-неопределённого. Проверять на память я не стал — прогнал против оракула оба
-варианта, `int.MaxValue` и старый `int.MinValue`, и совпал ровно первый.
-Нулевой `ThetaRange` дал бы `NaN`, а `(int)NaN` — это 0, после `Math.Max`
-превращающийся в 2; записано явно.
+C# divides by zero, gets an infinity, and the `(int)` cast **saturates** it to
+`int.MaxValue`; the 1000-point threshold then sends the arc to bezier. That is
+.NET Core 3.0+ behaviour: the float→int conversion became saturating rather
+than undefined. I did not check that from memory — I ran both variants,
+`int.MaxValue` and the old `int.MinValue`, against the oracle, and exactly the
+first one matched. A zero `ThetaRange` would give `NaN`, and `(int)NaN` is 0,
+which `Math.Max` turns into 2; written out explicitly.
 
-**Восемнадцатая. Пустой сегмент пути: порт был СНИСХОДИТЕЛЬНЕЕ оригинала.**
+**Eighteenth. An empty path segment: the port was MORE PERMISSIVE than the
+original.**
 
-Найдена не сама по себе: после правки семнадцатой карта перестала падать,
-но комбо разошлось — 938 против 929 у оракула.
+Not found on its own: after the seventeenth was fixed the beatmap stopped
+crashing, but the combo diverged — 938 against the oracle's 929.
 
-Слайдер начинается с `D|I|C|K|S|B|82:226|…` — шесть буквенных токенов подряд,
-и каждый открывает сегмент с одной и той же позиции, так что сегменты со
-второго по шестой оказываются пустыми. C# пишет `vertices[0].Type = type`
-без всякой проверки, ловит `IndexOutOfRange`, и `ParseStreamInto` пропускает
-строку целиком. Порт аккуратно возвращал пустой список и слайдер сохранял —
-вместе с девятью вложенными объектами, которых у осу нет.
+The slider begins with `D|I|C|K|S|B|82:226|…` — six letter tokens in a row,
+each opening a segment from the same position, so segments two through six come
+out empty. C# writes `vertices[0].Type = type` with no check at all, catches an
+`IndexOutOfRange`, and `ParseStreamInto` skips the line entirely. The port
+neatly returned an empty list and kept the slider — along with nine nested
+objects osu! does not have.
 
-**Быть терпимее оригинала — такая же ошибка, как быть строже.** Шестнадцатая
-находка была про излишнюю строгость, восемнадцатая — про излишнюю мягкость,
-и обе меняют комбо. Всякий раз, когда порт «аккуратно обрабатывает» случай,
-на котором C# падает, надо смотреть, что делает с этим падением вызывающий:
-здесь оно означает потерю объекта, а не безобидную защиту.
+**Being more permissive than the original is as much a bug as being stricter.**
+The sixteenth finding was about excessive strictness, the eighteenth about
+excessive leniency, and both change combo. Whenever the port "neatly handles" a
+case on which C# crashes, one has to look at what the caller does with that
+crash: here it means losing an object, not a harmless guard.
 
-Отдельно замечено и **сознательно не воспроизведено**: `convertPathString`
-берёт `pointsBuffer[endIndex]` из массива, арендованного у `ArrayPool`, и при
-двух буквенных токенах в конце строки (`L|1:1|B|C`) читает ячейку за пределами
-заполненного участка, то есть мусор от прежнего арендатора. Воспроизвести
-недетерминированное чтение нечем; порт подставляет `None`. В корпусе такой
-путь не встретился.
+Noticed separately and **deliberately not reproduced**: `convertPathString`
+takes `pointsBuffer[endIndex]` from an array rented from `ArrayPool`, and with
+two letter tokens at the end of the string (`L|1:1|B|C`) it reads a cell beyond
+the filled region, i.e. garbage from a previous tenant. There is no way to
+reproduce a non-deterministic read; the port substitutes `None`. No such path
+occurred in the corpus.
 
-**Девятнадцатая. Файл в UTF-16 отвергался целиком.** Та самая «первая
-аномалия» `191276.osu`: карта сохранена в UTF-16 LE, порт читал её как UTF-8
-и не находил даже строку формата — то есть отвергал карту, которую осу
-считает без единой жалобы. C# открывает файл через `StreamReader`
-с умолчаниями, а у него `detectEncodingFromByteOrderMarks = true`: UTF-16
-и UTF-32 распознаются по метке порядка байтов. Проверки и их порядок
-воспроизведены из `StreamReader.DetectEncoding`; проба — `utf16-beatmap.osu`
-в `tests/edge_cases/`.
+**Nineteenth. A UTF-16 file was rejected outright.** That very "first anomaly",
+`191276.osu`: the beatmap is saved in UTF-16 LE, the port read it as UTF-8 and
+could not even find the format line — that is, it rejected a beatmap osu!
+computes without a single complaint. C# opens the file through a `StreamReader`
+with defaults, and that has `detectEncodingFromByteOrderMarks = true`: UTF-16
+and UTF-32 are recognised by the byte order mark. The checks and their order
+are reproduced from `StreamReader.DetectEncoding`; the probe is
+`utf16-beatmap.osu` in `tests/edge_cases/`.
 
-### Мод Classic: что от него остаётся при FC
+### The Classic mod: what was left out at first, and why
 
-Порт `CL` — случай, обратный всем предыдущим разделам: искали не ошибку,
-а границу. В `OsuPerformanceCalculator` флаг `usingClassicSliderAccuracy` ветвит
-расчёт в пяти местах, и заманчиво было перенести все пять. При FC живой
-остаётся **одна**:
+*Written for the 0.2.0 scope, which covered FCs only. Release 0.3.0 implements
+all five branches; the reasoning is kept because it shows how the boundary was
+established rather than assumed.*
 
-| Ветка | Судьба при FC |
+Porting `CL` was the inverse of every section above: the search was not for a
+bug but for a boundary. In `OsuPerformanceCalculator` the
+`usingClassicSliderAccuracy` flag branches the calculation in five places, and
+it was tempting to carry all five over. On an FC exactly **one** stays alive:
+
+| Branch | Fate on an FC |
 |---|---|
-| `OsuLegacyScoreMissCalculator` | недостижима: нужен `LegacyTotalScore`, у симулированного скора его нет |
-| classic-оценка миссов по комбо | `fullComboThreshold` не больше `MaxCombo`, а комбо ему равно → оценка нулевая |
-| `calculateEstimatedSliderBreaks` | под гейтом `effectiveMissCount > 0` |
-| classic-нерф аима за слайдеры | оценка `Min(неточные, MaxCombo − комбо)` = 0, множитель тот же, что в lazer |
-| **состав объектов, несущих точность** | **живая: под CL в accuracy-компонент идут одни круги, без слайдеров** |
+| `OsuLegacyScoreMissCalculator` | unreachable: needs `LegacyTotalScore`, which a simulated score does not have |
+| classic combo-based miss estimate | `fullComboThreshold` is at most `MaxCombo`, and combo equals it → the estimate is zero |
+| `calculateEstimatedSliderBreaks` | gated behind `effectiveMissCount > 0` |
+| classic aim nerf for sliders | the estimate `Min(imperfect, MaxCombo − combo)` = 0, so the multiplier equals lazer's |
+| **which objects carry accuracy** | **alive: under CL only hit circles enter the accuracy component, without sliders** |
 
-Практический вывод: вместе со второй веткой не нужны и legacy-атрибуты
-`Aim/SpeedTopWeightedSliderFactor` — за её пределами они нигде не читаются.
-Три атрибута и сотни строк C# не портированы не потому, что «сложно»,
-а потому что доказуемо не влияют на результат в заявленном охвате.
+The practical consequence at the time: along with the second branch the legacy
+attributes `Aim/SpeedTopWeightedSliderFactor` were not needed either — outside
+it they are read nowhere. Three attributes and hundreds of lines of C# went
+unported not because they were "hard" but because they provably could not
+affect the result within the declared scope.
 
-Вторая половина отличия лежит не в формуле, а в семантике входа:
-`GenerateHitResults` под CL **не кладёт в статистику** ни хвостов слайдеров,
-ни тиков, поэтому `GetAccuracy` складывает одни круги. Отсюда следствие,
-которое стоит помнить: под CL «сырая» и видимая точности совпадают, и флаг
-`raw_accuracy` не значит ничего.
+The other half of the difference lies not in the formula but in the semantics
+of the input: under CL `GenerateHitResults` **does not put** slider tails or
+ticks into the statistics, so `GetAccuracy` adds up hit circles alone. Hence a
+consequence worth remembering: under CL the raw and the displayed accuracy
+coincide, and the `raw_accuracy` flag means nothing.
 
-**Двадцатая находка: лишний круг умножения-деления, на этот раз наш собственный.**
-Перевод «видимой» точности в «сырую» — не зеркало C#, а наш слой удобства,
-и под CL он алгебраически тождественный: хвостов и тиков нет, поэтому
-`(acc * 6n − 0) / 6n`. Соблазн убрать ветку `classic` из условия был прямой —
-и он же был ошибкой. Тождественный по алгебре, этот перевод добавляет **второй**
-круг умножения-деления к тому, который делает сама раскладка, а оракул делает
-ровно один. Та же двенадцатая находка, только теперь порт мог нажить её сам,
-на пустом месте.
+**Twentieth finding: a redundant multiply-divide round trip, this time our
+own.** Converting the "displayed" accuracy into the "raw" one is not a mirror
+of C# but our own convenience layer, and under CL it is algebraically an
+identity: there are no tails or ticks, so `(acc * 6n − 0) / 6n`. The temptation
+to drop the `classic` branch from the condition was immediate — and it was a
+mistake. Algebraically an identity, that conversion adds a **second**
+multiply-divide round trip to the one the breakdown itself performs, while the
+oracle performs exactly one. The twelfth finding again, only now the port could
+have inflicted it on itself, out of nothing.
 
-Разница не теоретическая: перебор показал три входа в диапазоне до 400 объектов,
-где раскладка расходится, — например 181 объект при 95%, где сотка становится
-пятидесяткой. На pp это 1%: `33.0047` против `32.6493`, при том что оракул
-даёт первое. Проба — `cl-acc-roundtrip.osu`.
+The difference is not theoretical: a sweep found three inputs within 400
+objects where the breakdown diverges — for instance 181 objects at 95%, where a
+100 turns into a 50. In pp that is 1%: `33.0047` against `32.6493`, with the
+oracle giving the former. The probe is `cl-acc-roundtrip.osu`.
 
-**И урок про саму пробу, дороже находки.** Первая версия пробы была подключена
-к гейту фазы 6, который зовёт расчёт с `raw_accuracy=True`. При этом флаге
-перевод точности не вызывается вовсе — то есть проба не проверяла ровно то,
-ради чего создавалась, и на снятом guard'е гейт остался **зелёным**. Поймала
-это только обязательная проверка на отрицательный результат. Теперь классические
-пробы гоняются в обеих трактовках, а проверка «под CL raw_accuracy не влияет»
-в гейте публичного API перенесена с карты, где равенство выполняется
-тождественно, на ту, где оно может сломаться.
+**And a lesson about the probe itself, worth more than the finding.** The first
+version of the probe was wired into the phase 6 gate, which calls the
+calculation with `raw_accuracy=True`. Under that flag the accuracy conversion
+is not invoked at all — so the probe was not testing the very thing it was
+created for, and with the guard removed the gate stayed **green**. Only the
+mandatory negative-result check caught that. Classic probes now run in both
+readings, and the "under CL raw_accuracy has no effect" check in the public API
+gate was moved from a beatmap where the equality holds identically to one where
+it could break.
 
-Правило, стоящее за этим, шире мода Classic: **проба обязана проходить через
-тот код, который проверяет.** Карта, подобранная под ошибку, ничего не гарантирует,
-если гейт зовёт расчёт по ветке, где ошибки нет.
+The rule behind this is broader than the Classic mod: **a probe must pass
+through the code it is testing.** A beatmap chosen for a bug guarantees nothing
+if the gate calls the calculation down a branch where the bug is absent.
 
-**Мод не трогает сложность, и это проверено кодом, а не только замером.**
-Все вхождения `ClassicSliderBehaviour` — исключительно `CreateJudgement`:
-меняются типы судейства, не геометрия и не состав вложенных объектов.
-Комбо сохраняется по неочевидной причине — вклад **переезжает**: хвост
-слайдера получает `LegacyTailJudgement` с `SmallTickHit`, который комбо
-не даёт, а сам слайдер вместо `OsuIgnoreJudgement` получает `OsuJudgement`,
-который даёт. Сумма та же, поэтому `MaxCombo` под CL совпадает с лазерным —
-но совпадает не тождественно, а с точностью до этой компенсации.
+**The mod does not touch difficulty, and that is verified by code rather than
+by measurement alone.** Every occurrence of `ClassicSliderBehaviour` is in
+`CreateJudgement`: what changes is the judgement types, not the geometry or the
+set of nested objects. Combo is preserved for a non-obvious reason — the
+contribution **migrates**: the slider tail gets a `LegacyTailJudgement` with
+`SmallTickHit`, which gives no combo, while the slider itself gets an
+`OsuJudgement` instead of an `OsuIgnoreJudgement`, which does. The sum is the
+same, so `MaxCombo` under CL equals lazer's — but not identically, only up to
+that compensation.
 
-### Остаток Reading
+### The Reading residue
 
-Эвалуатор `Reading` расходится с эталоном на 1–4 ulp примерно на 2–20% объектов.
-Остальные шесть эвалуаторов и все четыре скилла сходятся точно. Проверены
-и отброшены: перевод градусов в радианы, порядок суммирования, потеря разряда
-в `Norm`. Наиболее вероятная причина — различие реализаций `Math.Pow` в .NET
-и `math.pow` в CPython на конкретных входах.
+The `Reading` evaluator deviates from the reference by 1–4 ulp on roughly 2–20%
+of objects. The other six evaluators and all four skills match exactly.
+Checked and ruled out: degree-to-radian conversion, summation order, a lost
+digit in `Norm`. The most likely cause is a difference between the
+implementations of `Math.Pow` in .NET and `math.pow` in CPython on particular
+inputs.
 
-**Фаза 4 показала, во что это выливается: ни во что.** Из семнадцати атрибутов
-задет ровно один — `reading_difficult_note_count`, на 1 ulp (относительная
-погрешность 2.2e-16). И `reading_difficulty`, и `star_rating` совпадают точно
-во всех 25 комбинациях карт и модов.
+**Phase 4 showed what this amounts to: nothing.** Of the seventeen attributes
+exactly one is affected — `reading_difficult_note_count`, by 1 ulp (relative
+error 2.2e-16), and it is the gate's single entry in `KNOWN_ULP_DRIFT`. Both
+`reading_difficulty` and `star_rating` match exactly across all 70 combinations
+of beatmaps and mods.
 
-Более того, в pp-формуле этот атрибут встречается ровно в одном месте:
+Moreover, that attribute appears in the pp formula in exactly one place:
 
 ```csharp
 if (effectiveMissCount > 0)
     readingValue *= calculateMissPenalty(..., attributes.ReadingDifficultNoteCount);
 ```
 
-При FC `effectiveMissCount` равен нулю, поэтому ветка не выполняется никогда.
-Для заявленного охвата атрибут не используется вовсе. Вопрос закрыт; гейт фазы 4
-помечает это отклонение как известное и не считает ошибкой.
+On an FC `effectiveMissCount` is zero, so the branch never executes. On scores
+with misses the attribute does participate — and the 1 ulp deviation with it. A
+sensitivity measurement: a 1 ulp shift in `difficultStrainCount` moves the miss
+penalty by at most 1–2 ulp (usually not at all) at values from single digits to
+hundreds. The only dangerous range is within ~1e-7 of one, where `log` is close
+to zero: there the relative sensitivity rises to 2e-9.
+
+On the phase 7 gate's scores it does not reach pp through the miss penalty.
+
+**But `reading_difficulty` itself does reach pp.** Discovered while working on
+legacy scoring: on `diffcalc-test` under `HRDT` it drifts by 1 ulp and pp
+diverges by `3.8e-16`. It survived this long because the `HRDT` combination was
+absent from `FIXTURE_MOD_SETS` — the phase 4 gate had never seen it, and the
+corpus comparison holds a `1e-12` tolerance. `HRDT` and `CLHRDT` are in the
+phase 5 gate now.
+
+The moral: **a fixture set is coverage too.** A missing mod combination is no
+different from an untaken code branch.
+
+### Found while implementing arbitrary scores
+
+None of this would have surfaced on an FC: all four places live behind the
+`effectiveMissCount > 0` gate or in the classic branch.
+
+**Integer division where you expect a fractional one.**
+
+```csharp
+int maxPossibleSliderBreaks = Math.Min(attributes.SliderCount, (attributes.MaxCombo - scoreMaxCombo) / 2);
+```
+
+Both operands are `int`, so the division is integral. Python needs `//`. The
+trap is predictable but easy to miss: the expression looks like an ordinary
+fraction.
+
+**A ratio used as a count.**
+
+```csharp
+if (scoreMaxCombo < fullComboThreshold)
+    missCount = fullComboThreshold / Math.Max(1.0, scoreMaxCombo);
+```
+
+The threshold is divided by the combo, and the result is stored as the number
+of misses. By meaning that is a ratio, not a count; it looks like a bug in the
+original. Reproduce it literally.
+
+**Order in the sliderbreak estimate.** `nonMissMistakeAdjustment` is computed
+from the estimate *before* smoothing, while the multiplication by `Smoothstep`
+comes after:
+
+```csharp
+double nonMissMistakeAdjustment = (nonMissMistakes - estimatedSliderBreaks + 4.5) / (nonMissMistakes + 4);
+estimatedSliderBreaks *= DiffUtils.Smoothstep(effectiveMissCount, 1, 2);
+return estimatedSliderBreaks * nonMissMistakeAdjustment * DiffUtils.Logistic(missedComboPercent, 0.33, 15);
+```
+
+Swap the two lines and you get a different number, and no algebraic argument
+will catch it.
+
+**`Math.Log(Math.Max(1, x))` — division by zero.**
+
+```csharp
+private double calculateMissPenalty(double missCount, double difficultStrainCount)
+    => 0.93 / (missCount / (4 * Math.Log(Math.Max(1, difficultStrainCount))) + 1);
+```
+
+At `difficultStrainCount <= 1` the logarithm is zero: C# divides by it, gets an
+infinity and hence a zero multiplier, while Python falls over. Not theory — on
+four of the seven test-set beatmaps `ReadingDifficultNoteCount` is zero. Cured
+by `c_div`; verified by reverting the fix.
+
+**Under classic, `countSliderEndsDropped` equals the entire slider count.**
+`GetValueOrDefault(SliderTailHit)` yields zero for a missing key, and the
+subtraction leaves the full `SliderCount`. The value is read nowhere in the
+classic branch, but it must still be computed as the original does.
+
+**A gate that never entered the code says nothing about it.** The first run of
+the score matrix passed on the first attempt — because the mod sets contained
+no `FL`, so the flashlight penalty branch never executed at all. Since then the
+phase 7 gate counts hits per branch and fails if any of them stayed at zero.
 
 ---
 
-# Проверенные факты об экосистеме
+### Found while porting legacy scoring
+
+**Integer division legitimised by a comment.**
+
+```csharp
+// ReSharper disable once PossibleLossOfFraction (intentional to match osu-stable...)
+attributes.ComboScore += (int)(Math.Max(0, combo - 1) * (scoreIncrease / 25 * scoreMultiplier));
+```
+
+`scoreIncrease` is an `int`, so `300/25 = 12`, `30/25 = 1`, and `10/25 = 0`:
+**a slider tick does not enter the combo part of the score at all.**
+
+**`decimal` instead of double — emulating 80-bit registers.** Stable computed
+the ScoreV1 multiplier on x87, where the registers are wider than both float
+and double. .NET computes on SSE, so ppy moved to `decimal`, and the comment
+opens with "DO NOT TOUCH IF YOU DO NOT KNOW WHAT YOU ARE DOING". A subtlety
+that is easy to miss: the cast `(decimal)(double)float` keeps **15 significant
+digits**, not every digit of the double.
+
+**Combo arrives unclamped.** The rest of the calculator works with
+`Math.Clamp(score.MaxCombo, 0, MaxCombo)`, while `OsuLegacyScoreMissCalculator`
+reads `score.MaxCombo` directly. On a combo above the beatmap's maximum it
+produces a **negative** estimate, and the oracle prints it honestly.
+
+**Negative integer division.** A direct consequence of the previous point: `//`
+in Python rounds down while C# truncates toward zero, so `-1261/2` gives -631
+against -630. It does not affect pp — a negative estimate is clamped to zero
+anyway — but the value is exposed publicly, and the intermediate-value gate
+catches it.
+
+**The three legacy attributes have different sources, and they must not be
+confused.** The multiplier is taken from `WorkingBeatmap.Beatmap` — the
+original beatmap, before mod adjustments; `CalculateNestedScorePerObject` and
+the score simulator receive the playable version, with mods already applied.
+Our `prepare_beatmap` edits HP/OD/CS in place, so the multiplier is taken
+*before* it and the other two after. On the supported mods this makes no
+difference (HR and EZ change neither timing nor slider length), but writing
+"all three from the original beatmap" would be a lie about two of them.
+
+**The `[Events]` section stopped being optional.** Breaks are subtracted from
+the beatmap length, which enters the ScoreV1 multiplier. The decoder ignored
+Events entirely — it had to start parsing them.
+
+---
+
+### Twenty-first: the same division, a second place
+
+Found by re-reading the diff before publication — like the sixteenth, not by a
+gate and not by the corpus.
+
+`drain_length` computes `(span - breaks) // 1000`. The difference is negative
+when the breaks are longer than the beatmap's span, and anywhere in the
+-999..-1 ms window the two forms disagree: C# truncates toward zero and gives
+0, Python rounds down and gives -1.
+
+The lesson is not about the division — we had already fixed that with
+`c_int_div` — but that **a fix for a class of bug has to be carried to every
+place of that class**. Back then one place where the dividend goes negative was
+dealt with, and that was that. The second was right next door, in a file added
+by the same commit.
+
+The cost turned out higher than the first one's: there a negative estimate was
+clamped to zero anyway, whereas here zero and minus one land in *different*
+branches of `CalculateDifficultyPeppyStars` — at zero length `ratio = 16`, at a
+negative one it clamps to 0. The ScoreV1 multiplier changes twofold, the miss
+estimate comes out understated, and pp on the probe diverged by 14% in the
+flattering direction: 47.61 from the port against the oracle's 41.74.
+
+The probe is `tests/edge_cases/legacy-drain-underflow.osu`, wired into the
+phase 7 gate. Before adding it, it was checked to go red on the reintroduced
+bug: 28 mismatches, including pp itself.
+
+After the fix, EVERY integer division in the port was reviewed — there are
+four, and the other three are safe for distinct reasons rather than by eye:
+
+* `score_increase // 25` — the dividend is the literal `300` at all three call
+  sites;
+* `total_half_spins // 2` and `full_spins // 2` — the decoder clamps the
+  spinner with `max(end_time, start_time)`, so the duration is non-negative;
+* `(total_half_spins - half_spins_before_bonus) // 2` — this dividend *can* go
+  negative, and the two forms differ by one. But `Math.Max(0, bonus_spins -
+  full_spins / 2)` follows it, and the subtrahend is non-negative: both versions
+  yield zero. The difference is absorbed by the clamp rather than absent.
+
+---
+
+### On speed
+
+Measurement has to alternate runs of the old and the new version: single
+measurements on this machine wander by 4–5%, and the very first estimate of the
+gain came out over a percentage point too high. Five alternating passes give a
+spread below one percent.
+
+The profile shows the work is spread out: the most expensive function is the
+rhythm evaluator at 11% of the time, and another 22% goes into emulating
+float32, without which the calculation is wrong. There is no single bottleneck,
+so no large trivial gains remain.
+
+One was found and was worth 17.8%: **`min(max(x, lo), hi)` replaced by
+conditionals**. In Python a built-in call costs more than the comparison itself
+— 128 ns against 9.6 ns — and there are over three hundred thousand clamps per
+beatmap.
+
+The replacement is correct **only for the clamp chain**. A bare `min(a, b)`
+behaves differently from a conditional expression on NaN:
+
+```python
+min(nan, 1.0)                  # nan
+nan if nan < 1.0 else 1.0      # 1.0  — DIFFERENT
+```
+
+In the chain both comparisons are false, the value falls through to the "return
+as is" branch, and the NaN passes straight through — exactly as `Math.Clamp`
+requires in .NET (see the comment in `SliderPath._progress_to_distance`).
+Verified by enumerating `nan`, `±inf`, `-0.0` and values on both sides of the
+bounds.
+
+Bare `min`/`max` calls were therefore left alone, although they would have
+given roughly another 10%: that would be a silent change of semantics in
+hundreds of places for a few percent, in a library that is two orders of
+magnitude slower than the native alternative regardless.
+
+---
+
+# Verified facts about the ecosystem
 
 - `ppy/osu` @ `52461f1b` — `Version => 20260706`.
-- `rosu-pp` v4.0.1 (12.04.2026) портирует коммит osu! от **2025-10-13**;
-  в `src/osu/difficulty/skills/` есть только `aim, speed, flashlight, strain`,
-  скилла `reading` нет ([issue #76](https://github.com/MaxOhn/rosu-pp/issues/76)).
-- **Официальный API не является обходным путём.** `BeatmapDifficultyAttributes`
-  для std отдаёт `star_rating, max_combo, aim_difficulty, aim_difficult_slider_count,
-  speed_difficulty, speed_note_count, slider_factor, aim_difficult_strain_count,
-  speed_difficult_strain_count` — и всё. Ни `reading_difficulty`,
-  ни `flashlight_difficulty`, ни `hit_circle_count`, без которых pp не восстановить.
+- `rosu-pp` 4.0.2 has **no `Reading` skill for osu!standard**: the `reading`
+  attribute comes back `None`, alongside the other rulesets' fields in the same
+  union type ([issue #76](https://github.com/MaxOhn/rosu-pp/issues/76)). Its
+  star rating for `diffcalc-test` is 6.6233 against the reference 6.5243, so it
+  is not at `20260706`. It does carry part of the same era's work — its
+  `legacy_score_base_multiplier`, `nested_score_per_object` and
+  `maximum_legacy_combo_score` match ours exactly — so its pin sits somewhere
+  between the legacy-scoring change and the Reading rebalance. Checking that
+  attribute is a more reliable version probe than any date.
+- **The official API is not a workaround.** For std,
+  `BeatmapDifficultyAttributes` returns `star_rating, max_combo, aim_difficulty,
+  aim_difficult_slider_count, speed_difficulty, speed_note_count, slider_factor,
+  aim_difficult_strain_count, speed_difficult_strain_count` — and that is all.
+  Neither `reading_difficulty` nor `flashlight_difficulty` nor
+  `hit_circle_count`, without which pp cannot be reconstructed.

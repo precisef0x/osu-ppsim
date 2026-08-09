@@ -27,7 +27,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tools"))
 
 from oracle import OracleError, simulate  # noqa: E402
-from osu_ppsim import BeatmapParseError, Simulator, decode_beatmap  # noqa: E402
+from osu_ppsim import BeatmapParseError, HitCounts, Score, Simulator, decode_beatmap  # noqa: E402
 
 #: Наборы модов, из которых выбирается по одному на карту. Половина с CL:
 #: классическая механика счёта ветвится отдельно от лазерной, и проверять её
@@ -44,6 +44,35 @@ TOLERANCE = 1e-12
 
 def split_mods(text: str) -> tuple[str, ...]:
     return tuple(text[i : i + 2] for i in range(0, len(text), 2))
+
+
+def _random_score_options(rng: random.Random, simulator: Simulator, classic: bool) -> dict:
+    """Случайные параметры не-FC скора для osu-tools.
+
+    Комбо берётся долей от максимального, промахи и потери — долей от числа
+    объектов, чтобы параметры оставались осмысленными на картах любого размера.
+    """
+    max_combo = simulator.max_combo
+    objects = simulator.difficulty.hit_circle_count + simulator.difficulty.slider_count
+
+    options: dict = {}
+    if rng.random() < 0.8:
+        options["misses"] = rng.randint(1, max(1, objects // 10))
+    if rng.random() < 0.8:
+        options["combo"] = rng.randint(1, max(1, max_combo))
+    if classic:
+        # Сумма очков есть только у классических скоров и включает совсем другую
+        # ветку оценки промахов — по очкам вместо комбо.
+        if rng.random() < 0.5:
+            ceiling = max(1, int(simulator.difficulty.maximum_legacy_combo_score))
+            options["legacy_total_score"] = rng.randint(1, ceiling)
+    else:
+        # Хвостов и тиков классическая механика не знает.
+        if rng.random() < 0.5:
+            options["slider_tail_misses"] = rng.randint(1, max(1, simulator.difficulty.slider_count))
+        if rng.random() < 0.5:
+            options["large_tick_misses"] = rng.randint(1, 20)
+    return options
 
 
 def main() -> int:
@@ -65,6 +94,8 @@ def main() -> int:
 
     checked_maps = 0
     checked_combos = 0
+    non_fc_combos = 0
+    legacy_combos = 0
     skipped = {"не std": 0, "пустая": 0, "не разобралась": 0, "оракул отказал": 0}
     mismatches: list[dict] = []
     worst = 0.0
@@ -108,8 +139,13 @@ def main() -> int:
 
         map_ok = True
         for accuracy in ACCURACIES:
+            # Половина скоров — не-FC: промахи, потерянное комбо, недодержанные
+            # хвосты. Раскладка потом читается из ответа оракула, а не выводится
+            # заново, иначе сверялись бы два разных скора.
+            options = _random_score_options(rng, simulator, "CL" in mods) if rng.random() < 0.5 else {}
+
             try:
-                expected = simulate(path, accuracy, split_mods(mods))
+                expected = simulate(path, accuracy, split_mods(mods), **options)
             except OracleError:
                 skipped["оракул отказал"] += 1
                 map_ok = False
@@ -122,14 +158,33 @@ def main() -> int:
             # Падение здесь ловится по той же причине, что и на построении:
             # необработанное исключение — такое же расхождение с эталоном, и
             # прогон на тысячах карт не должен из-за него обрываться целиком.
+            statistics = expected["score"]["statistics"]
+            score = Score(
+                counts=HitCounts(
+                    great=statistics["great"],
+                    ok=statistics["ok"],
+                    meh=statistics["meh"],
+                    miss=statistics["miss"],
+                ),
+                max_combo=expected["score"]["combo"],
+                slider_tail_hits=statistics.get("slider_tail_hit"),
+                large_tick_misses=statistics.get("large_tick_miss", 0),
+                legacy_total_score=options.get("legacy_total_score"),
+            )
+            if options:
+                non_fc_combos += 1
+            if "legacy_total_score" in options:
+                legacy_combos += 1
+
             try:
-                actual_pp = simulator.pp(accuracy, raw_accuracy=True).pp
+                actual_pp = simulator.score(score).pp
             except Exception:  # noqa: BLE001
                 mismatches.append(
                     {
                         "map": path.name,
                         "mods": mods or "NM",
                         "accuracy": accuracy,
+                        "score": options,
                         "error": traceback.format_exc().splitlines()[-1],
                     }
                 )
@@ -147,6 +202,7 @@ def main() -> int:
                         "map": path.name,
                         "mods": mods or "NM",
                         "accuracy": accuracy,
+                        "score": options,
                         "objects": len(beatmap.hit_objects),
                         "pp": [actual_pp, expected_pp, pp_deviation],
                         "star_rating": [simulator.star_rating, expected_sr, sr_deviation],
@@ -163,7 +219,7 @@ def main() -> int:
                 )
 
     print()
-    print(f"проверено карт: {checked_maps}, комбинаций: {checked_combos}")
+    print(f"проверено карт: {checked_maps}, комбинаций: {checked_combos} (не-FC: {non_fc_combos}, с суммой очков: {legacy_combos})")
     print(f"пропущено: {skipped}")
     print(f"расхождений: {len(mismatches)}, худшее относительное отклонение: {worst:.3e}")
 

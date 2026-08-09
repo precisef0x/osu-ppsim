@@ -30,6 +30,7 @@ GATES = (
     ("4", "атрибуты и звёзды", "test_phase4_attributes.py", False),
     ("5", "pp за FC", "test_phase5_performance.py", True),
     ("6", "краевые случаи декодера", "test_edge_cases.py", True),
+    ("7", "pp за произвольный скор", "test_phase7_scores.py", True),
     ("—", "снапшот краевых случаев", "test_snapshot.py", False),
     ("—", "публичный API", "test_public_api.py", False),
 )

@@ -9,14 +9,18 @@ difficulty-математика идёт в double и трогать её не �
 from __future__ import annotations
 
 import math
-from ctypes import c_float
+import struct
 
 __all__ = ["f32", "Vec2"]
 
 
+_PACK_F32 = struct.Struct("<f").pack
+_UNPACK_F32 = struct.Struct("<f").unpack
+
+
 def f32(x: float) -> float:
     """Округляет до ближайшего float32 — как C# при присваивании double во float."""
-    return c_float(x).value
+    return _UNPACK_F32(_PACK_F32(x))[0]
 
 
 class Vec2:
@@ -28,9 +32,11 @@ class Vec2:
 
     __slots__ = ("x", "y")
 
-    def __init__(self, x: float = 0.0, y: float = 0.0) -> None:
-        self.x = f32(x)
-        self.y = f32(y)
+    def __init__(self, x: float = 0.0, y: float = 0.0, _p=_PACK_F32, _u=_UNPACK_F32) -> None:
+        # f32 развёрнут вручную: на карте это сотни тысяч конструирований,
+        # и два вызова функции на каждое заметны в профиле.
+        self.x = _u(_p(x))[0]
+        self.y = _u(_p(y))[0]
 
     def __add__(self, other: Vec2) -> Vec2:
         return Vec2(self.x + other.x, self.y + other.y)

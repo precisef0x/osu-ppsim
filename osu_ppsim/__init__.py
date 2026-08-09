@@ -1,4 +1,4 @@
-"""osu-ppsim: расчёт pp за FC-прохождение карты на заданной accuracy.
+"""osu-ppsim: расчёт pp для карты osu!standard.
 
 Соответствует версии расчёта osu! 20260706 («2026 Q2 SR & PP release»).
 
@@ -8,11 +8,14 @@
     print(result.pp, result.difficulty.star_rating)
 
 Для нескольких значений точности на одной карте — Simulator: сложность
-от accuracy не зависит и считается один раз.
+от accuracy не зависит и считается один раз. Он же считает произвольный скор:
 
-Охват: только osu!standard, только FC. Моды — NM, NF, DT, NC, HT, DC, HR, EZ,
-HD, FL и CL; на остальных поднимается UnsupportedModError. Мод CL включает
-классическую (stable) механику подсчёта точности, без него счёт лазерный.
+    sim.score(Score(counts=HitCounts(great=1542, ok=65, meh=0, miss=5),
+                    max_combo=1800))
+
+Охват: только osu!standard. Моды — NM, NF, DT, NC, HT, DC, HR, EZ, HD, FL и CL;
+на остальных поднимается UnsupportedModError. Мод CL включает классическую
+(stable) механику подсчёта точности, без него счёт лазерный.
 """
 
 from __future__ import annotations
@@ -30,6 +33,7 @@ from .difficulty.calculator import (
 from .mods import Mods, UnsupportedModError, parse_mods
 from .performance.accuracy import (
     HitCounts,
+    Score,
     hit_counts_for_raw_accuracy,
     raw_accuracy_for_display,
     score_accuracy,
@@ -37,7 +41,7 @@ from .performance.accuracy import (
 from .performance.calculator import OsuPerformanceAttributes, calculate_performance
 
 #: Версия самой библиотеки; версия расчёта osu! — SUPPORTED_DIFFCALC_VERSION.
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     # Точки входа.
@@ -48,6 +52,7 @@ __all__ = [
     "OsuDifficultyAttributes",
     "OsuPerformanceAttributes",
     "HitCounts",
+    "Score",
     "Mods",
     # Что поднимается на негодном входе.
     "BeatmapParseError",
@@ -94,7 +99,7 @@ class Simulator:
     """Карта с применёнными модами: сложность посчитана, pp считается по запросу.
 
     Difficulty-атрибуты не зависят от accuracy, поэтому считаются один раз:
-    около 350 мс на карте в 1600 объектов против 9 мкс на каждый расчёт pp.
+    около 280 мс на карте в 1600 объектов против 12 мкс на каждый расчёт pp.
     """
 
     def __init__(self, beatmap: str | Path | Beatmap, mods: str | list[str] | Mods | None = None) -> None:
@@ -148,11 +153,30 @@ class Simulator:
         )
 
         counts = hit_counts_for_raw_accuracy(self._total_objects, target_raw)
-        effective = score_accuracy(counts, slider_count, large_ticks)
+        return self.score(Score(counts=counts), requested_accuracy=accuracy)
+
+    def score(self, score: Score, *, requested_accuracy: float | None = None) -> Result:
+        """Считает pp за произвольный скор: с промахами, потерянным комбо,
+        недодержанными хвостами и пропущенными тиками.
+
+        Значения по умолчанию в `Score` описывают FC, поэтому `pp()` — частный
+        случай этого метода, а не отдельная ветка расчёта.
+        """
+        classic = self.mods.classic_slider_accuracy
+        slider_count = 0 if classic else self.difficulty.slider_count
+        large_ticks = 0 if classic else self._large_ticks
+
+        effective = score_accuracy(
+            score.counts,
+            slider_count,
+            large_ticks,
+            slider_tail_hits=None if classic else score.slider_tail_hits,
+            large_tick_misses=0 if classic else score.large_tick_misses,
+        )
 
         performance = calculate_performance(
             self.difficulty,
-            counts,
+            score,
             effective,
             self.mods,
             self.beatmap.overall_difficulty,
@@ -162,9 +186,9 @@ class Simulator:
         return Result(
             performance=performance,
             difficulty=self.difficulty,
-            hit_counts=counts,
+            hit_counts=score.counts,
             mods=self.mods,
-            requested_accuracy=accuracy,
+            requested_accuracy=effective if requested_accuracy is None else requested_accuracy,
             accuracy=effective,
         )
 

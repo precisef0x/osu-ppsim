@@ -2884,6 +2884,246 @@
       "pp": 24.81902302623466
     },
     {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 3.9896374695339514,
+      "max_combo": 444,
+      "actual_accuracy": 1.0,
+      "pp": 98.83808284368304
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "NM",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 3.9896374695339514,
+      "max_combo": 444,
+      "actual_accuracy": 1.0,
+      "pp": 98.83808284368304
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": false,
+      "star_rating": 3.9896374695339514,
+      "max_combo": 444,
+      "actual_accuracy": 0.9801801801801802,
+      "pp": 80.31822509335227
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "NM",
+      "accuracy": 98.0,
+      "raw_accuracy": true,
+      "star_rating": 3.9896374695339514,
+      "max_combo": 444,
+      "actual_accuracy": 0.9837837837837838,
+      "pp": 82.95944526991346
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 5.981442484260129,
+      "max_combo": 444,
+      "actual_accuracy": 0.9495495495495495,
+      "pp": 216.00428353139387
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "HDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 5.981442484260129,
+      "max_combo": 444,
+      "actual_accuracy": 0.9603603603603603,
+      "pp": 225.79604454053342
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 4.467045266665822,
+      "max_combo": 444,
+      "actual_accuracy": 0.9891891891891892,
+      "pp": 175.47295818489997
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "HR",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 4.467045266665822,
+      "max_combo": 444,
+      "actual_accuracy": 0.9927927927927928,
+      "pp": 186.5146617531231
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 2.893790597723117,
+      "max_combo": 444,
+      "actual_accuracy": 0.9693693693693693,
+      "pp": 22.12193989509177
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "EZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 2.893790597723117,
+      "max_combo": 444,
+      "actual_accuracy": 0.9765765765765766,
+      "pp": 22.630912236300944
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 4.358179113245686,
+      "max_combo": 444,
+      "actual_accuracy": 1.0,
+      "pp": 117.37091097344138
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "FL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 4.358179113245686,
+      "max_combo": 444,
+      "actual_accuracy": 1.0,
+      "pp": 117.37091097344138
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": false,
+      "star_rating": 5.802523052368624,
+      "max_combo": 444,
+      "actual_accuracy": 0.9603603603603603,
+      "pp": 209.58960568646768
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "NFNC",
+      "accuracy": 96.0,
+      "raw_accuracy": true,
+      "star_rating": 5.802523052368624,
+      "max_combo": 444,
+      "actual_accuracy": 0.9675675675675676,
+      "pp": 217.3220867336496
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 3.7115304076909426,
+      "max_combo": 444,
+      "actual_accuracy": 1.0,
+      "pp": 64.96126315473869
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "HDDC",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 3.7115304076909426,
+      "max_combo": 444,
+      "actual_accuracy": 1.0,
+      "pp": 64.96126315473869
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": false,
+      "star_rating": 3.9896374695339514,
+      "max_combo": 444,
+      "actual_accuracy": 0.990990990990991,
+      "pp": 80.39832018422864
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "CL",
+      "accuracy": 99.0,
+      "raw_accuracy": true,
+      "star_rating": 3.9896374695339514,
+      "max_combo": 444,
+      "actual_accuracy": 0.990990990990991,
+      "pp": 80.39832018422864
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": false,
+      "star_rating": 5.981442484260129,
+      "max_combo": 444,
+      "actual_accuracy": 0.9504504504504504,
+      "pp": 205.81837116343968
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "CLHDDT",
+      "accuracy": 95.0,
+      "raw_accuracy": true,
+      "star_rating": 5.981442484260129,
+      "max_combo": 444,
+      "actual_accuracy": 0.9504504504504504,
+      "pp": 205.81837116343968
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": false,
+      "star_rating": 2.893790597723117,
+      "max_combo": 444,
+      "actual_accuracy": 0.9707207207207207,
+      "pp": 21.922416049588843
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "CLEZHT",
+      "accuracy": 97.0,
+      "raw_accuracy": true,
+      "star_rating": 2.893790597723117,
+      "max_combo": 444,
+      "actual_accuracy": 0.9707207207207207,
+      "pp": 21.922416049588843
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": false,
+      "star_rating": 4.358179113245686,
+      "max_combo": 444,
+      "actual_accuracy": 1.0,
+      "pp": 110.38865852373657
+    },
+    {
+      "beatmap": "legacy-drain-underflow",
+      "mods": "CLFL",
+      "accuracy": 100.0,
+      "raw_accuracy": true,
+      "star_rating": 4.358179113245686,
+      "max_combo": 444,
+      "actual_accuracy": 1.0,
+      "pp": 110.38865852373657
+    },
+    {
       "beatmap": "no-speed-difficulty",
       "mods": "NM",
       "accuracy": 100.0,

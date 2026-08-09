@@ -90,7 +90,7 @@ def parse_mods(mods: str | list[str] | frozenset[str] | Mods | None) -> Mods:
     if isinstance(mods, str):
         text = mods.upper().replace(" ", "").replace(",", "")
         if len(text) % 2 != 0:
-            raise UnsupportedModError(f"не разобрать набор модов: {mods!r}")
+            raise UnsupportedModError(f"cannot parse mod set: {mods!r}")
         acronyms = {text[i : i + 2] for i in range(0, len(text), 2)}
     else:
         acronyms = {m.upper() for m in mods}
@@ -100,15 +100,15 @@ def parse_mods(mods: str | list[str] | frozenset[str] | Mods | None) -> Mods:
     unsupported = sorted(acronyms - SUPPORTED_MODS)
     if unsupported:
         raise UnsupportedModError(
-            f"мод {', '.join(unsupported)} не поддерживается; охват: {', '.join(sorted(SUPPORTED_MODS))}"
+            f"mod {', '.join(unsupported)} is not supported; supported: {', '.join(sorted(SUPPORTED_MODS))}"
         )
 
     rate_mods = acronyms & set(_RATE)
     if len(rate_mods) > 1:
-        raise UnsupportedModError(f"несовместимые моды скорости: {', '.join(sorted(rate_mods))}")
+        raise UnsupportedModError(f"incompatible rate mods: {', '.join(sorted(rate_mods))}")
 
     if {"HR", "EZ"} <= acronyms:
-        raise UnsupportedModError("HR и EZ несовместимы")
+        raise UnsupportedModError("HR and EZ are incompatible")
 
     return Mods(frozenset(acronyms))
 

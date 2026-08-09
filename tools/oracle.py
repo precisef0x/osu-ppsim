@@ -54,11 +54,29 @@ def _run(cmd: list[str]) -> str:
     return proc.stdout
 
 
-def simulate(beatmap: str | Path, accuracy: float = 100.0, mods: tuple[str, ...] = ()) -> dict:
-    """Считает FC-скор на заданной accuracy и возвращает JSON целиком.
+def simulate(
+    beatmap: str | Path,
+    accuracy: float = 100.0,
+    mods: tuple[str, ...] = (),
+    *,
+    misses: int | None = None,
+    goods: int | None = None,
+    mehs: int | None = None,
+    combo: int | None = None,
+    large_tick_misses: int | None = None,
+    slider_tail_misses: int | None = None,
+    legacy_total_score: int | None = None,
+) -> dict:
+    """Считает скор и возвращает JSON целиком.
 
-    Комбо и промахи не задаём: у osu-tools --combo по умолчанию равно максимуму
-    карты, а --misses нулю, то есть дефолт уже описывает FC.
+    Без именованных параметров описывает FC: у osu-tools --combo по умолчанию
+    равно максимуму карты, а --misses нулю. Каждый заданный параметр добавляет
+    ключ в командную строку и только тогда меняет поведение — поэтому FC-вызовы
+    остаются байт в байт теми же, что и до появления этих параметров.
+
+    ВНИМАНИЕ: goods и mehs у osu-tools ПЕРЕОПРЕДЕЛЯЮТ accuracy, а не уточняют её.
+    Раскладку, с которой считал оракул, надо читать из score.statistics ответа,
+    а не выводить самостоятельно, иначе сверяются два разных скора.
     """
     if not DLL.exists():
         raise OracleError(
@@ -70,6 +88,18 @@ def simulate(beatmap: str | Path, accuracy: float = 100.0, mods: tuple[str, ...]
     cmd = ["dotnet", str(DLL), "simulate", "osu", str(_resolve_beatmap(beatmap)), "-a", str(accuracy), "-j"]
     for mod in mods:
         cmd += ["-m", mod]
+
+    for option, value in (
+        ("--misses", misses),
+        ("--goods", goods),
+        ("--mehs", mehs),
+        ("--combo", combo),
+        ("--large-tick-misses", large_tick_misses),
+        ("--slider-tail-misses", slider_tail_misses),
+        ("--legacy-total-score", legacy_total_score),
+    ):
+        if value is not None:
+            cmd += [option, str(value)]
 
     out = _run(cmd)
     try:

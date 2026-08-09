@@ -1,111 +1,158 @@
-# Точность расчёта и как она проверяется
+# Accuracy of the calculation, and how it is verified
 
-Эталон — настоящий C#-код osu!, собранный из запиненных коммитов
-(см. [oracle/PINNED.md](../oracle/PINNED.md)), а не опубликованные значения:
-литералы в тестах ppy держатся на свободном допуске `1e-5` и успевают отстать
-от master.
+The reference is the real C# code of osu!, built from pinned commits
+(see [oracle/PINNED.md](../oracle/PINNED.md)), rather than published values:
+the literals in ppy's own tests sit on a loose `1e-5` tolerance and drift
+behind master.
 
-## Гейты по слоям
+## Layered gates
 
-Порт сверяется с эталоном послойно — от разбора файла до итоговых pp. Расхождение
-в раннем слое неизбежно утащит за собой всё остальное, поэтому при поломке
-смотреть надо на самую раннюю упавшую фазу.
+The port is checked against the reference layer by layer — from parsing the
+file to the final pp. A discrepancy in an early layer inevitably drags
+everything after it along, so when something breaks the earliest failing phase
+is the one to look at.
 
-| Гейт | Что проверяет | Объём |
+| Gate | What it checks | Volume |
 |---|---|---|
-| Фаза 1 | разбор `.osu`, геометрия слайдеров, стакинг, `MaxCombo` | 17 карт |
-| Фаза 2 | `OsuDifficultyHitObject` | 562 884 значения |
-| Фаза 3 | 7 эвалуаторов и 4 скилла | 7 наборов модов |
-| Фаза 4 | difficulty-атрибуты и звёзды | 63 комбинации |
-| Фаза 5 | **pp** | 1020 комбинаций (в том числе 7 наборов с `CL`), отклонение `0.000e+00` |
-| Фаза 6 | краевые случаи | 21 карта, из них 2 под `CL` |
+| Phase 1 | `.osu` parsing, slider geometry, stacking, `MaxCombo` | 17 beatmaps |
+| Phase 2 | `OsuDifficultyHitObject` | 562 884 values |
+| Phase 3 | 7 evaluators and 4 skills | 7 mod sets |
+| Phase 4 | difficulty attributes and star rating | 70 combinations, 17 attributes |
+| Phase 5 | **pp** | 1140 combinations, deviation `3.798e-16` |
+| Phase 6 | edge cases | 21 beatmaps, 2 of them under `CL` |
+| Phase 7 | **pp for an arbitrary score** | 1428 scores, 15 708 values |
 
 ```bash
 python3 tests/run_all.py
 ```
 
-Фазам 5 и 6 нужен собранный оракул (см. ниже), фазы 1–4 работают на сохранённых
-фикстурах.
+Phases 5–7 need the oracle built (see below); phases 1–4 run off stored
+fixtures.
 
-## Проверка на корпусе
+## Corpus verification
 
-Гейты проверяют аккуратно подобранные карты, поэтому порт дополнительно
-прогоняется на реальном корпусе `.osu`. Две проверки отвечают на разные вопросы.
+The gates check carefully chosen beatmaps, so the port is additionally run over
+a real corpus of `.osu` files. The two checks answer different questions.
 
-**Сходятся ли числа** — случайная выборка против живого osu-tools:
+**Do the numbers agree** — a random sample against a live osu-tools:
 
 ```bash
 python3 tools/sweep.py ~/Downloads/osu_files --count 500
 ```
 
-Выборка воспроизводима по зерну; смена зерна даёт новые карты. Половина наборов
-модов классические, поэтому один прогон проверяет обе механики счёта.
+The sample is reproducible from its seed; changing the seed yields new
+beatmaps. Half the mod sets are classic, so a single run exercises both
+scoring mechanics.
 
-| Прогон | Объём | Результат |
+| Run | Volume | Result |
 |---|---|---|
-| Лазерные наборы, накопительно | 5000 карт, 15 000 комбинаций | расхождений нет, худшее `4.1e-16` |
-| С классическими, зерно `20260728` | 600 карт, 1800 комбинаций | расхождений нет, худшее `2.1e-16` |
+| Lazer mod sets, cumulative | 5000 beatmaps, 15 000 combinations | no mismatches, worst `4.1e-16` |
+| With random scores, seed `70707` | 400 beatmaps, 1200 combinations (584 non-FC) | no mismatches, worst `3.6e-16` |
+| With score totals, seed `8080` | 400 beatmaps, 1200 combinations (146 with a total) | no mismatches, worst `5.8e-16` |
+| With classic sets, seed `20260728` | 600 beatmaps, 1800 combinations | no mismatches, worst `2.1e-16` |
+| After the clamp rewrite, seed `20260810` | 500 beatmaps, 1500 combinations (704 non-FC, 183 with a total) | no mismatches, worst `4.0e-16` |
 
-**Что порт отвергает и где падает** — сплошной прогон без оракула:
+The last run exists because release 0.3.0 rewrote the clamp as conditionals —
+a change touching hundreds of thousands of calls per beatmap across the whole
+difficulty calculation. The gates covered it, but the gates are not where this
+project's bugs have historically been caught.
+
+**What the port rejects and where it falls over** — a full scan without the
+oracle:
 
 ```bash
 python3 tools/corpus_scan.py ~/Downloads/osu_files
 ```
 
-Оракул здесь не нужен, поэтому корпус проходится целиком за 45 минут. Последний
-прогон: 231 780 файлов, аномалий нет — 150 796 карт посчитаны, 80 984 не
-osu!standard, 30 разобраны с пропуском битых строк.
+The oracle is not needed here, so the whole corpus is covered in 45 minutes.
+Last run: 231 780 files, no anomalies — 150 796 beatmaps computed, 80 984 not
+osu!standard, 30 parsed while skipping broken lines. It was repeated for 0.3.0,
+because that release taught the decoder to parse `[Events]`, and the decoder is
+where nine of the numbered bugs lived; the tallies came out identical to the
+previous run, file for file.
 
-Из двадцати найденных за всю разработку ошибок **семь** нашла выборочная
-сверка и **три** — сплошной прогон; ни одну из этих десяти не поймал ни один гейт.
-Двадцатую не нашла ни одна из проверок — она вылезла при перечитывании
-собственного диффа (см. [PORTING.md](PORTING.md)).
+[PORTING.md](PORTING.md) numbers twenty-one bugs, and they break down by how
+each was found: **twelve** by reading the port against C#, **four** by the
+sampled comparison, **three** by the full scan, and **two** by re-reading the
+port's own diff — the last of which changed pp by 14%. Not one of those last
+nine was caught by any gate. Six earlier bugs, described in the sections
+preceding the numbering, are not part of that count.
 
-Сплошной прогон под `CL` не повторялся, и это обоснованно: мод не участвует
-ни в разборе файла, ни в расчёте сложности, а отвечает этот прогон именно
-на вопросы «что не разобралось» и «где упало». Числа под `CL` проверяет
-выборочная сверка, где половина наборов модов классические.
+The full scan was not repeated under `CL`, and that is justified: the mod takes
+part neither in parsing the file nor in computing difficulty, and this run
+answers exactly the questions "what failed to parse" and "where did it fall
+over". Numbers under `CL` are covered by the sampled comparison, where half the
+mod sets are classic.
 
-## Известные отклонения
+## Arbitrary scores
 
-**Под `CL` флаг `raw_accuracy` ничего не делает.** Это не недоработка:
-классическая механика считает точность по одним кругам, поэтому «сырая»
-и видимая точности совпадают по построению. Свойство закреплено гейтом
-публичного API и снапшотом.
+Phase 7 compares not only the final pp but every intermediate value the oracle
+prints separately: both miss estimates, both sliderbreak estimates, and all
+five pp components. A broken layer names itself.
 
-**Точность ниже 16.67% недостижима.** Ниже этого порога 300 и 100 кончаются,
-и osu-tools добирает недостающее промахами — а FC этого не может по определению.
-Запрос 15% даёт максимум мимо, то есть фактические 25%. Поле `Result.accuracy`
-покажет настоящее значение, но с `osu-tools -a 15` результат не сойдётся.
-Это граница охвата, а не ошибка расчёта.
+The gate additionally counts how many scores hit each branch and fails if any
+of them never fired. This is not belt-and-braces: the first run of the matrix
+passed on the first attempt only because the mod sets contained no `FL`, so the
+flashlight penalty branch never executed at all.
 
-**Эвалуатор `Reading`** расходится с эталоном на 1–4 ulp примерно на 2–20%
-объектов. Из семнадцати атрибутов это задевает один — `reading_difficult_note_count`,
-а он **при FC не используется**: в pp-формуле встречается только внутри
-`if (effectiveMissCount > 0)`. Звёзды, `reading_difficulty` и сами pp сходятся
-бит в бит.
+**Classic scores with a known score total are supported.** For them misses are
+estimated from the score total rather than from combo: in stable a sliderbreak
+is indistinguishable from a dropped tail by the statistics, but distinguishable
+by the total, because ScoreV1 multiplies every hit by the current combo
+multiplier. The branch fired in 756 of the gate's 1428 scores.
 
-**Тайминг-секции с временами вразнобой.** Группировка одновременных точек
-воспроизводит `flushPendingPoints` для последовательных строк — то есть для
-всего, что пишут редакторы. Файл с неупорядоченными дублями времён потребовал бы
-логики `ControlPointInfo.Add`; сочтено не стоящим сложности.
+## Known deviations
 
-## Оракул
+**Under `CL` the `raw_accuracy` flag does nothing.** This is not an oversight:
+classic mechanics count accuracy over hit circles alone, so the raw and the
+displayed accuracy coincide by construction. The property is pinned down by the
+public API gate and by the snapshot.
 
-Гейты фаз 5 и 6 сверяются с живым расчётом osu!, поэтому для них нужен
-C#-инструментарий. Для работы самой библиотеки он **не требуется**.
+**Accuracy below 16.67% is unreachable.** Below that threshold 300s and 100s
+run out and osu-tools makes up the rest with misses — which an FC cannot do by
+definition. Requesting 15% yields the maximum number of 50s, i.e. an actual
+25%. The `Result.accuracy` field will show the true value, but the result will
+not agree with `osu-tools -a 15`. That is a boundary of the scope, not a
+calculation error — and it belongs to deriving an FC breakdown from a target
+accuracy. Passing an explicit breakdown to `score()` has no such limit.
 
-Понадобится .NET 8 — не свежее, `global.json` в `ppy/osu` ограничивает
-роллфорвард веткой 8.0:
+**The `Reading` evaluator** deviates from the reference by 1–4 ulp on roughly
+2–20% of objects. Two attributes are affected.
+
+`reading_difficult_note_count` — unused entirely on an FC (in the pp formula it
+appears only inside `if (effectiveMissCount > 0)`); it participates on scores
+with misses, but there is no amplification: a 1 ulp shift moves the miss
+penalty by 1–2 ulp at most.
+
+`reading_difficulty` — on certain mod combinations it drifts by 1 ulp and
+**reaches pp**. Measured on `diffcalc-test` under `HRDT`: `1197.3941449623242`
+against the oracle's `1197.3941449623246`, i.e. `3.8e-16`. Star rating still agrees — the cube root saves
+it. The combination is deliberately included in the phase 5 gate, which is why
+its worst deviation is `3.798e-16` rather than zero: hiding a known deviation
+by dropping a mod set would be worse than keeping it visible under a tolerance.
+
+**Timing sections with out-of-order times.** Grouping of simultaneous points
+reproduces `flushPendingPoints` for consecutive lines — that is, for everything
+editors actually write. A file with unordered duplicate times would require the
+logic of `ControlPointInfo.Add`; judged not worth the complexity.
+
+## The oracle
+
+The phase 5–7 gates compare against a live osu! calculation, so they need the
+C# toolchain. The library itself does **not** require it.
+
+.NET 8 is needed — not newer; `global.json` in `ppy/osu` limits roll-forward to
+the 8.0 branch:
 
 ```bash
 brew install --cask dotnet-sdk@8
 ```
 
-Дальше — по инструкции в [oracle/PINNED.md](../oracle/PINNED.md): там зафиксированы
-коммиты `ppy/osu` и `ppy/osu-tools`, с которых снят эталон, и команды сборки.
+From there follow [oracle/PINNED.md](../oracle/PINNED.md): it records the
+`ppy/osu` and `ppy/osu-tools` commits the reference was taken from, and the
+build commands.
 
-Фикстуры для фаз 1–4 генерируются оттуда же:
+Fixtures for phases 1–4 are generated from the same place:
 
 ```bash
 python3 tools/oracle.py fixtures

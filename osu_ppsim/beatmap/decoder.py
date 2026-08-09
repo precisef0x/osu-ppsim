@@ -4,8 +4,9 @@
           osu.Game/Rulesets/Objects/Legacy/ConvertHitObjectParser.cs
 Пин: ppy/osu @ 52461f1b (Version 20260706)
 
-Разбирается только то, что нужно для расчёта сложности: General, Difficulty,
-TimingPoints, HitObjects. Events, Colours, сэмплы и сториборд игнорируются.
+Разбирается только то, что нужно для расчёта: General, Difficulty, TimingPoints,
+HitObjects и брейки из Events. Остальное в Events, Colours, сэмплы и сториборд
+игнорируются.
 """
 
 from __future__ import annotations
@@ -31,7 +32,7 @@ from .objects import (
     SplineType,
 )
 
-__all__ = ["Beatmap", "TimingPoint", "DifficultyPoint", "decode_beatmap", "BeatmapParseError"]
+__all__ = ["Beatmap", "BreakPeriod", "TimingPoint", "DifficultyPoint", "decode_beatmap", "BeatmapParseError"]
 
 #: LegacyBeatmapEncoder.FIRST_LAZER_VERSION. До неё координаты усекаются до int,
 #: а вырожденные дуги схлопываются в прямую — ради совместимости со stable.
@@ -97,6 +98,15 @@ class DifficultyPoint:
         self.slider_velocity = min(max(self.slider_velocity, 0.1), 10.0)
 
 
+@dataclass(frozen=True)
+class BreakPeriod:
+    """Перерыв из секции Events. Нужен только легаси-скорингу: он вычитается
+    из длительности карты при расчёте множителя ScoreV1."""
+
+    start_time: float
+    end_time: float
+
+
 @dataclass
 class Beatmap:
     format_version: int = 14
@@ -110,6 +120,7 @@ class Beatmap:
     slider_multiplier: float = 1.4
     slider_tick_rate: float = 1.0
 
+    breaks: list[BreakPeriod] = field(default_factory=list)
     timing_points: list[TimingPoint] = field(default_factory=list)
     difficulty_points: list[DifficultyPoint] = field(default_factory=list)
     hit_objects: list[HitObject] = field(default_factory=list)
@@ -166,9 +177,9 @@ def _parse_float(value: str, limit: float = MAX_PARSE_VALUE, allow_nan: bool = F
     number = float(value.strip())
 
     if number < -limit or number > limit:
-        raise BeatmapParseError(f"значение вне допустимого предела ±{limit:g}: {value!r}")
+        raise BeatmapParseError(f"value out of range ±{limit:g}: {value!r}")
     if not allow_nan and number != number:
-        raise BeatmapParseError(f"значение не может быть NaN: {value!r}")
+        raise BeatmapParseError(f"value must not be NaN: {value!r}")
 
     return number
 
@@ -178,7 +189,7 @@ def _parse_int(value: str, limit: int = int(MAX_PARSE_VALUE)) -> int:
     number = int(value.strip())
 
     if number < -limit or number > limit:
-        raise BeatmapParseError(f"значение вне допустимого предела ±{limit}: {value!r}")
+        raise BeatmapParseError(f"value out of range ±{limit}: {value!r}")
 
     return number
 
@@ -220,7 +231,7 @@ def decode_beatmap_string(text: str) -> Beatmap:
     except BeatmapParseError:
         raise
     except (ValueError, IndexError) as exc:
-        raise BeatmapParseError(f"не разобрать карту: {exc}") from exc
+        raise BeatmapParseError(f"cannot parse beatmap: {exc}") from exc
 
 
 def _decode(text: str) -> Beatmap:
@@ -286,6 +297,9 @@ def _decode(text: str) -> Beatmap:
                 elif key == "SliderTickRate":
                     beatmap.slider_tick_rate = _parse_float(value)
 
+            elif section == "Events":
+                _parse_event(beatmap, line)
+
             elif section == "TimingPoints":
                 timing_point_lines.append(line)
 
@@ -296,10 +310,10 @@ def _decode(text: str) -> Beatmap:
 
     if not saw_version:
         # Decoder.GetDecoder отвергает файл без строки формата.
-        raise BeatmapParseError("не найдена строка «osu file format vN»")
+        raise BeatmapParseError('no "osu file format vN" line found')
 
     if beatmap.mode != 0:
-        raise BeatmapParseError(f"поддерживается только osu!standard, а Mode={beatmap.mode}")
+        raise BeatmapParseError(f"only osu!standard is supported, got Mode={beatmap.mode}")
 
     _apply_difficulty_restrictions(beatmap)
     _parse_timing_points(beatmap, timing_point_lines)
@@ -315,6 +329,23 @@ def _decode(text: str) -> Beatmap:
 
     beatmap.hit_objects.sort(key=lambda h: h.start_time)
     return beatmap
+
+
+#: LegacyEventType.Break. Enum.TryParse принимает и число, и имя.
+_BREAK_EVENT_TYPES = ("2", "Break")
+
+
+def _parse_event(beatmap: Beatmap, line: str) -> None:
+    """LegacyBeatmapDecoder.handleEvent — из всей секции нужны только брейки."""
+    parts = line.split(",")
+    if parts[0] not in _BREAK_EVENT_TYPES:
+        return
+    if len(parts) < 3:
+        raise BeatmapParseError(f"break line too short: {line!r}")
+
+    start = _parse_float(parts[1])
+    end = max(start, _parse_float(parts[2]))
+    beatmap.breaks.append(BreakPeriod(start_time=start, end_time=end))
 
 
 def _apply_difficulty_restrictions(beatmap: Beatmap) -> None:
@@ -404,7 +435,7 @@ def _parse_timing_points(beatmap: Beatmap, lines: list[str]) -> None:
 def _parse_timing_line(beatmap: Beatmap, line: str) -> _TimingLine:
     parts = line.split(",")
     if len(parts) < 2:
-        raise BeatmapParseError(f"слишком короткая строка тайминга: {line!r}")
+        raise BeatmapParseError(f"timing point line too short: {line!r}")
 
     time = _parse_float(parts[0])
     beat_length = _parse_float(parts[1], allow_nan=True)
@@ -418,11 +449,11 @@ def _parse_timing_line(beatmap: Beatmap, line: str) -> _TimingLine:
     timing_change = True
     if len(parts) > 6:
         if not parts[6]:
-            raise BeatmapParseError(f"пустое поле смены темпа в строке {line!r}")
+            raise BeatmapParseError(f"empty beat length field in line {line!r}")
         timing_change = parts[6][0] == "1"
 
     if timing_change and math.isnan(beat_length):
-        raise BeatmapParseError("beatLength не может быть NaN у точки смены темпа")
+        raise BeatmapParseError("beatLength of a timing point must not be NaN")
 
     return _TimingLine(
         time=time,
@@ -436,7 +467,7 @@ def _parse_timing_line(beatmap: Beatmap, line: str) -> _TimingLine:
 def _parse_hit_object(beatmap: Beatmap, line: str) -> HitObject:
     parts = line.split(",")
     if len(parts) < 4:
-        raise BeatmapParseError(f"слишком короткая строка объекта: {line!r}")
+        raise BeatmapParseError(f"hit object line too short: {line!r}")
 
     position = _read_position(beatmap.format_version, parts[0], parts[1])
     start_time = _parse_float(parts[2])
@@ -460,7 +491,7 @@ def _parse_hit_object(beatmap: Beatmap, line: str) -> HitObject:
             spinner_end_time=max(end_time, start_time),
         )
 
-    raise BeatmapParseError(f"неизвестный тип объекта {type_flags} в строке {line!r}")
+    raise BeatmapParseError(f"unknown hit object type {type_flags} in line {line!r}")
 
 
 def _parse_slider(
@@ -470,7 +501,7 @@ def _parse_slider(
     start_time: float,
 ) -> Slider:
     if len(parts) < 6:
-        raise BeatmapParseError("у слайдера нет описания пути")
+        raise BeatmapParseError("slider has no path description")
 
     control_points = _convert_path_string(beatmap.format_version, parts[5], position)
 
@@ -478,7 +509,7 @@ def _parse_slider(
     if len(parts) > 6:
         repeat_count = _parse_int(parts[6])
         if repeat_count > MAX_REPEAT_COUNT:
-            raise BeatmapParseError(f"слишком много повторов у слайдера: {repeat_count}")
+            raise BeatmapParseError(f"too many slider repeats: {repeat_count}")
         # osu-stable считал первый пролёт повтором, хотя повторов ещё нет.
         repeat_count = max(0, repeat_count - 1)
 
@@ -615,7 +646,7 @@ def _convert_points(
         # снисходительнее нельзя: осу такой слайдер не считает, и комбо меняется.
         # Пустой сегмент даёт путь вида "D|I|C|K|S|B|82:226|..." — буквенные
         # токены подряд, каждый начинает сегмент с той же позиции.
-        raise BeatmapParseError("пустой сегмент пути: несколько типов подряд без точек")
+        raise BeatmapParseError("empty path segment: consecutive types with no points")
 
     # Тип обязателен у первой точки сегмента.
     vertices[0].type = seg_type

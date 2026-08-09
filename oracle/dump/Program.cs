@@ -132,7 +132,34 @@ namespace Dump
                     .Select(o => dumpEvaluators(o, mods)).ToArray(),
                 skills = calculator.CapturedSkills.Select(dumpSkill).ToArray(),
                 attributes = dumpAttributes(attributes),
+                // Легаси-скоринг: брейки и производная от них длина «слива».
+                // Секцию [Events] порт до сих пор не разбирал, и без прямой
+                // сверки ошибка в ней проявилась бы только через peppy stars —
+                // целое число, которое чаще всего её проглотит.
+                legacy = dumpLegacy(working.Beatmap),
             };
+
+            static object dumpLegacy(IBeatmap baseBeatmap)
+            {
+                int breakLength = baseBeatmap.Breaks
+                    .Select(b => (int)Math.Round(b.EndTime) - (int)Math.Round(b.StartTime)).Sum();
+                int drainLength = 0;
+
+                if (baseBeatmap.HitObjects.Count > 0)
+                {
+                    drainLength = ((int)Math.Round(baseBeatmap.HitObjects[^1].StartTime)
+                                   - (int)Math.Round(baseBeatmap.HitObjects[0].StartTime) - breakLength) / 1000;
+                }
+
+                return new
+                {
+                    breaks = baseBeatmap.Breaks
+                        .Select(b => new { start_time = b.StartTime, end_time = b.EndTime }).ToArray(),
+                    break_length = breakLength,
+                    drain_length = drainLength,
+                    object_count = baseBeatmap.HitObjects.Count,
+                };
+            }
 
             var options = new JsonSerializerOptions
             {

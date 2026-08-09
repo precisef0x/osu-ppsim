@@ -25,7 +25,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Final
 
-__all__ = ["HitCounts", "hit_counts_for_raw_accuracy", "score_accuracy", "raw_accuracy_for_display"]
+__all__ = ["HitCounts", "Score", "hit_counts_for_raw_accuracy", "score_accuracy", "raw_accuracy_for_display"]
 
 #: Веса в формуле точности lazer.
 _SLIDER_TAIL_WEIGHT: Final[float] = 3.0
@@ -44,6 +44,28 @@ class HitCounts:
     @property
     def total(self) -> int:
         return self.great + self.ok + self.meh + self.miss
+
+
+@dataclass(frozen=True)
+class Score:
+    """Что игрок сделал на карте — вход расчёта pp (аналог ScoreInfo).
+
+    Всё, кроме попаданий, необязательно и по умолчанию описывает FC:
+    комбо максимальное, хвосты собраны, тики не потеряны.
+
+    `slider_tail_hits` и `large_tick_misses` существуют только в лазерной
+    механике: под CL их в статистике нет, и они должны остаться нулевыми.
+    """
+
+    counts: HitCounts
+    #: None означает максимальное комбо карты.
+    max_combo: int | None = None
+    #: None означает «собраны все хвосты».
+    slider_tail_hits: int | None = None
+    large_tick_misses: int = 0
+    #: Сумма очков ScoreV1. Есть только у скоров из stable; вместе с модом CL
+    #: включает оценку промахов по очкам вместо оценки по комбо.
+    legacy_total_score: int | None = None
 
 
 def hit_counts_for_raw_accuracy(total_objects: int, raw_accuracy: float) -> HitCounts:
@@ -97,19 +119,31 @@ def hit_counts_for_raw_accuracy(total_objects: int, raw_accuracy: float) -> HitC
     return HitCounts(great=great, ok=ok, meh=meh, miss=0)
 
 
-def score_accuracy(counts: HitCounts, slider_count: int, large_tick_count: int) -> float:
-    """OsuSimulateCommand.GetAccuracy при FC.
+def score_accuracy(
+    counts: HitCounts,
+    slider_count: int,
+    large_tick_count: int,
+    slider_tail_hits: int | None = None,
+    large_tick_misses: int = 0,
+) -> float:
+    """OsuSimulateCommand.GetAccuracy.
 
-    Хвосты и тики собраны полностью, поэтому входят и в числитель, и в знаменатель.
-    Под CL их в статистике нет вовсе — тогда оба счётчика нулевые.
+    В знаменатель идут все хвосты и тики карты, в числитель — только собранные.
+    `slider_tail_hits = None` означает «собраны все», то есть FC.
+
+    Под CL хвостов и тиков в статистике нет вовсе, и C# пропускает оба блока
+    целиком; у нас это выражено нулевыми slider_count и large_tick_count.
     """
     total = 6 * counts.great + 2 * counts.ok + counts.meh
     maximum = 6 * (counts.great + counts.ok + counts.meh + counts.miss)
 
-    total += _SLIDER_TAIL_WEIGHT * slider_count
+    if slider_tail_hits is None:
+        slider_tail_hits = slider_count
+
+    total += _SLIDER_TAIL_WEIGHT * slider_tail_hits
     maximum += _SLIDER_TAIL_WEIGHT * slider_count
 
-    total += _LARGE_TICK_WEIGHT * large_tick_count
+    total += _LARGE_TICK_WEIGHT * (large_tick_count - large_tick_misses)
     maximum += _LARGE_TICK_WEIGHT * large_tick_count
 
     return total / maximum if maximum else 0.0

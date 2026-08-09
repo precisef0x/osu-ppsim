@@ -28,11 +28,16 @@ BEATMAPS = ROOT / "oracle/osu/osu.Game.Rulesets.Osu.Tests/Resources/Testing/Beat
 #: Классических наборов меньше: CL ветвит только accuracy-компонент, поэтому
 #: их задача — покрыть его во всех сочетаниях с rate- и difficulty-модами,
 #: а не повторить всю лазерную сетку.
-LAZER_MOD_SETS = ("", "HD", "DT", "HDDT", "FL", "HDFL", "HR", "EZ", "HT", "NF")
-CLASSIC_MOD_SETS = ("CL", "CLHD", "CLDT", "CLHDDT", "CLFL", "CLHR", "CLEZ")
+LAZER_MOD_SETS = ("", "HD", "DT", "HDDT", "FL", "HDFL", "HR", "HRDT", "EZ", "HT", "NF")
+CLASSIC_MOD_SETS = ("CL", "CLHD", "CLDT", "CLHDDT", "CLFL", "CLHR", "CLHRDT", "CLEZ")
 MOD_SETS = LAZER_MOD_SETS + CLASSIC_MOD_SETS
 ACCURACIES = (100.0, 99.5, 99.0, 98.0, 95.0, 90.0)
 
+#: HRDT добавлен намеренно: на diffcalc-test под ним эвалуатор Reading уходит
+#: на 1 ulp, и это доходит до pp (~4e-16). Обходить такое сочетание значило бы
+#: печатать «0.000e+00» и прятать известное отклонение вместо того, чтобы
+#: держать его на виду и под допуском.
+#:
 #: pp совпадает с оракулом побитово, поэтому допуск нужен лишь как страховка
 #: от неожиданностей на новых картах.
 TOLERANCE = 1e-12

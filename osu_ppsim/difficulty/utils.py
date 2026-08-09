@@ -34,6 +34,7 @@ __all__ = [
     "erf_inv",
     "sequential_sum",
     "c_div",
+    "c_int_div",
     "bpm_to_milliseconds",
     "milliseconds_to_bpm",
 ]
@@ -43,7 +44,14 @@ SQRT2 = 1.4142135623730950
 
 
 def clamp(value: float, low: float, high: float) -> float:
-    return min(max(value, low), high)
+    """Math.Clamp.
+
+    Записано условиями, а не через min/max: в Python вызов встроенной функции
+    дороже самого сравнения, а этих зажимов на карту сотни тысяч. На NaN обе
+    записи ведут себя одинаково — оба сравнения ложны, и значение проходит
+    насквозь, как и требует .NET. Проверено перебором по краевым значениям.
+    """
+    return low if value < low else (high if value > high else value)
 
 
 def c_div(numerator: float, denominator: float) -> float:
@@ -57,6 +65,22 @@ def c_div(numerator: float, denominator: float) -> float:
     if numerator == 0 or numerator != numerator:
         return math.nan
     return math.inf if numerator > 0 else -math.inf
+
+
+def c_int_div(numerator: int, denominator: int) -> int:
+    """Целочисленное деление в семантике C#: усечение К НУЛЮ.
+
+    Python `//` округляет вниз, поэтому на отрицательных числах расходится:
+    `-1261 // 2` даёт -631, а C# `-1261 / 2` — ровно -630.
+
+    Делимое уходит в минус в одном месте: оценка промахов по сумме очков
+    получает комбо НЕзажатым, и на комбо выше максимума карты разность
+    отрицательна. На pp это не влияет — отрицательная оценка всё равно
+    зажимается в ноль, — но сама величина отдаётся наружу и обязана совпадать
+    с оракулом.
+    """
+    quotient = abs(numerator) // abs(denominator)
+    return quotient if (numerator >= 0) == (denominator >= 0) else -quotient
 
 
 def bpm_to_milliseconds(bpm: float, delimiter: int = 4) -> float:
@@ -103,18 +127,23 @@ def lerp(start: float, final: float, amount: float) -> float:
 
 def reverse_lerp(x: float, start: float, end: float) -> float:
     """DiffUtils.ReverseLerp."""
-    return clamp((x - start) / (end - start), 0.0, 1.0)
+    # clamp развёрнут вручную: эти функции дают большую часть из трёхсот тысяч
+    # его вызовов на карту, а вызов в Python дороже самого сравнения.
+    x = (x - start) / (end - start)
+    return 0.0 if x < 0.0 else (1.0 if x > 1.0 else x)
 
 
 def smoothstep(x: float, start: float, end: float) -> float:
     """DiffUtils.Smoothstep."""
-    x = clamp((x - start) / (end - start), 0.0, 1.0)
+    x = (x - start) / (end - start)
+    x = 0.0 if x < 0.0 else (1.0 if x > 1.0 else x)
     return x * x * (3.0 - 2.0 * x)
 
 
 def smootherstep(x: float, start: float, end: float) -> float:
     """DiffUtils.Smootherstep."""
-    x = clamp((x - start) / (end - start), 0.0, 1.0)
+    x = (x - start) / (end - start)
+    x = 0.0 if x < 0.0 else (1.0 if x > 1.0 else x)
     return x * x * x * (x * (6.0 * x - 15.0) + 10.0)
 
 
@@ -142,7 +171,8 @@ def norm(p: float, *values: float) -> float:
 def smoothstep_bell_curve_unit(x: float) -> float:
     """DiffUtils.SmoothstepBellCurve(x) — вариант с единичным носителем."""
     x = 0.5 - abs(x - 0.5)
-    x = clamp(x * 2.0, 0.0, 1.0)
+    x = x * 2.0
+    x = 0.0 if x < 0.0 else (1.0 if x > 1.0 else x)
     return x * x * (3.0 - 2.0 * x)
 
 
