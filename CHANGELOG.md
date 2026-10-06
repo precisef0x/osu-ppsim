@@ -3,6 +3,39 @@
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 versioning follows [SemVer](https://semver.org/).
 
+## 0.4.0 — 2026-10-06
+
+### Added and changed
+
+- **Beatmaps from memory:** `Simulator` and `pp_for_accuracy` accept raw `.osu`
+  `bytes` or `bytearray`. New public `decode_beatmap_bytes` and
+  `decode_beatmap_string` entry points share the existing decoder and BOM handling.
+- **Per-object difficulty series:** `Simulator.object_difficulties`,
+  `ObjectDifficulties`, and `calculate_difficulty_with_strains` expose aim,
+  aim without sliders, speed, reading, and optional flashlight values aligned
+  with playback times. Empty beatmaps return empty series.
+- **Score validation is enabled by default:** `Simulator.score` raises
+  `InvalidScoreError` for counter bounds and necessary combo contradictions.
+  `max_combo=None` still means the beatmap's maximum, so scores with combo
+  losses need an explicit combo. In lazer, losses include missed ticks,
+  repeats and tails; under `CL`, nested fields have their bounds checked but
+  otherwise remain ignored. New public `validate_score` supports both mechanics.
+  `score(..., validate=False)` retains the previous unchecked calculation.
+- Documented the validation guarantees, memory growth of retained series,
+  and the comparison with rosu-pp-py without claiming that it releases the GIL.
+
+### Verification
+
+Calculation version remains **`20260706`**. All nine gates pass:
+
+- 80 autonomous validation cases through both public entry points, including
+  exact result agreement with validation enabled and disabled.
+- 70 beatmap-and-mod combinations, 160 812 public series values including
+  times; reading uses tolerance `1e-12`, the other series compare exactly.
+- 1140 FC combinations against the oracle, worst relative deviation `3.798e-16`.
+- 1428 arbitrary scores, 15 708 compared values, exact agreement with the oracle.
+- 528 snapshot combinations across 22 edge-case beatmaps.
+
 ## 0.3.0 — 2026-08-10
 
 ### Added and changed

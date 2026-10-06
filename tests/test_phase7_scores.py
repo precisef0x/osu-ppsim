@@ -150,7 +150,10 @@ def main() -> int:
                     large_tick_misses=statistics.get("large_tick_miss", 0),
                     legacy_total_score=legacy_total,
                 )
-                result = simulator.score(score)
+                # Матрица включает невозможные входы, которые osu-tools считает
+                # без проверки. Здесь сверяется расчёт; принятие и отклонение
+                # скоров независимо проверяет автономный test_public_api.py.
+                result = simulator.score(score, validate=False)
                 checked += 1
 
                 if wanted["effective_miss_count"] > 0:

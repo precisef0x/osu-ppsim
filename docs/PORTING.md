@@ -59,7 +59,8 @@ osu_ppsim/
     legacy_score.py      LegacyScoreUtils + OsuLegacyScoreSimulator (combo score)
     skills/              Strain / VariableLengthStrain / Harmonic + Aim, Speed, Reading, Flashlight
     evaluators/          snap, flow, agility (Aim), speed, rhythm, reading, flashlight
-    calculator.py        OsuDifficultyCalculator -> OsuDifficultyAttributes
+    calculator.py        OsuDifficultyCalculator -> OsuDifficultyAttributes,
+                         plus ObjectDifficulties (Skill.ObjectDifficulties per skill)
   performance/
     accuracy.py          accuracy -> a 300/100/50 breakdown (from osu-tools)
     legacy_miss.py       OsuLegacyScoreMissCalculator
@@ -123,6 +124,14 @@ peaks may only be taken after `Calculate()` has finished, and for the same
 reason a cumulative `DifficultyValue()` curve over objects cannot be taken —
 section peaks and per-object `ObjectDifficulties` are used to localise
 discrepancies instead.
+
+That constraint is also why `ObjectDifficulties`, and not the section peaks, is
+what the library exposes publicly as `Simulator.object_difficulties`. Of the
+four skills only `Flashlight` still has fixed-length sections; `Aim` keeps its
+peaks sorted by magnitude rather than by time, and `Speed` and `Reading` are
+`HarmonicSkill` and have no sections at all. The per-object list is the only
+series that exists for every skill, is ordered by time, and survives a rebalance
+that reshuffles the accumulation schemes.
 
 **Checking mods gives independent confirmation of the analysis.** HD moves only
 `reading_difficulty` (1.780 → 2.211), FL only `flashlight_difficulty`, and

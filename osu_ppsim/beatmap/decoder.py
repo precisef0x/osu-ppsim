@@ -32,7 +32,16 @@ from .objects import (
     SplineType,
 )
 
-__all__ = ["Beatmap", "BreakPeriod", "TimingPoint", "DifficultyPoint", "decode_beatmap", "BeatmapParseError"]
+__all__ = [
+    "Beatmap",
+    "BreakPeriod",
+    "TimingPoint",
+    "DifficultyPoint",
+    "decode_beatmap",
+    "decode_beatmap_bytes",
+    "decode_beatmap_string",
+    "BeatmapParseError",
+]
 
 #: LegacyBeatmapEncoder.FIRST_LAZER_VERSION. До неё координаты усекаются до int,
 #: а вырожденные дуги схлопываются в прямую — ради совместимости со stable.
@@ -195,10 +204,25 @@ def _parse_int(value: str, limit: int = int(MAX_PARSE_VALUE)) -> int:
 
 
 def decode_beatmap(path: str | Path) -> Beatmap:
-    return decode_beatmap_string(_decode_text(Path(path).read_bytes()))
+    """Разбирает .osu с диска."""
+    return decode_beatmap_bytes(Path(path).read_bytes())
 
 
-def _decode_text(raw: bytes) -> str:
+def decode_beatmap_bytes(raw: bytes | bytearray) -> Beatmap:
+    """Разбирает содержимое .osu, ещё не декодированное в строку.
+
+    Это тот же путь, которым идёт decode_beatmap: кодировка определяется по BOM,
+    как её определяет сам osu!. Нужен, когда файла на диске нет — карта скачана
+    по HTTP или лежит в архиве.
+
+    Строку, уже декодированную кем-то другим, принимает decode_beatmap_string;
+    брать её вместо байтов не стоит, если источник мог угадать кодировку иначе:
+    карты в UTF-16 в корпусе есть.
+    """
+    return decode_beatmap_string(_decode_text(raw))
+
+
+def _decode_text(raw: bytes | bytearray) -> str:
     """StreamReader.DetectEncoding: osu! открывает файл с распознаванием BOM.
 
     Проверки и их порядок взяты оттуда же. Карты в UTF-16 в корпусе есть.

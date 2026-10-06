@@ -92,6 +92,101 @@ score-based estimates diverge by up to 10% pp. Every score submitted from
 stable has a score total, and it arrives together with the statistics from the
 osu! API.
 
+#### Score validation
+
+`score()` checks nonnegative counters, hit counts that sum to the beatmap's
+object count, and tail and tick counts within the beatmap's limits. It also
+rejects combo above the beatmap's maximum or zero combo when anything was hit.
+In lazer that includes hits on ticks, repeats and tails even when every main
+object was missed.
+
+Each miss removes at least one combo unit. In lazer, missed ticks and repeats
+and unheld tails remove units too, so combo cannot exceed the beatmap's maximum
+minus those losses. These are necessary conditions: passing validation does
+not prove that the score could be achieved in the beatmap's particular order.
+There are no plausibility heuristics.
+
+`max_combo=None` means the beatmap's maximum, and `slider_tail_hits=None` means
+all tails were collected. Validation uses those defaults exactly as the
+calculation does, so a score with losses needs an explicit combo. Under `CL`,
+tail and tick fields still have their bounds checked against the beatmap, but
+their values affect neither the combo bound nor the calculated result.
+
+A contradiction raises `InvalidScoreError`. `score(..., validate=False)` skips
+validation and computes as-is; for an accepted score both flag values give
+exactly the same result.
+
+### A beatmap that is not on disk
+
+`.osu` content can be passed straight in as bytes — a beatmap downloaded over
+HTTP does not have to be written to a file first:
+
+```python
+sim = Simulator(httpx.get(f"https://osu.ppy.sh/osu/{beatmap_id}").content, mods="HDDT")
+```
+
+`str` and `Path` are paths, `bytes` is the content itself, and a `str` is never
+sniffed to tell which one was meant — quietly guessing wrong is worse than
+asking for it plainly, so an already-decoded string goes through
+`decode_beatmap_string` instead. Bytes are the better input of the two where
+you have a choice: the encoding is detected from the BOM the way osu! itself
+detects it, and beatmaps in UTF-16 do exist in the wild.
+
+```python
+from osu_ppsim import decode_beatmap, decode_beatmap_bytes, decode_beatmap_string
+```
+
+### Difficulty over time (strains)
+
+Every skill records what it scored on each object, and `Simulator` hands those
+series back — this is the data a difficulty graph is drawn from:
+
+```python
+sim = Simulator("map.osu", mods="HDDT")
+series = sim.object_difficulties
+
+series.times           # ms; max(object_count - 1, 0) entries
+series.aim             # aligned with times, same length
+series.speed
+series.reading
+series.aim_no_sliders
+series.flashlight      # None unless FL is on
+```
+
+Every series contains `max(N - 1, 0)` values, where `N` is the beatmap's object
+count. Difficulty is a property of the movement between two objects, so the
+first object starts none; an empty beatmap has empty series too.
+
+Nothing is computed twice for them: the skills accumulate these lists during the
+difficulty calculation regardless, and all `Simulator` does is keep them instead
+of dropping them. What that costs on a 1600-object beatmap is 36 µs of copying
+against the ~250 ms of the calculation itself. Keeping the tuples also retains
+their Python numbers: memory grows with the object count and the number of
+series, and its size depends on the Python implementation.
+
+Two things to know before plotting. **Times are divided by the clock rate** —
+they are playback time, not positions on the beatmap's timeline, so under `DT`
+they are 1.5× smaller than the times in the `.osu`; multiply by
+`sim.mods.clock_rate` to get back. And the series are **per object**, not per
+fixed time slice, so the x-axis is unevenly spaced; bin it yourself if you want
+uniform buckets.
+
+Per object rather than per 400 ms section — the shape rosu-pp returns — because
+the 2026 Q2 rebalance split the skills across three accumulation schemes. Fixed
+sections survive only in `Flashlight`. `Aim` has variable-length sections whose
+peak list is sorted by magnitude rather than by time, which makes it useless as
+an x-axis. `Speed` and `Reading` are not strain skills at all: they sum sorted
+per-object difficulties and have no sections whatsoever. The per-object series
+is the one thing all four have in common, and it is verified against the C#
+reference object by object — 160 812 values, including times, across 70 beatmap-and-mod
+combinations, compared through this very API rather than through the skills
+behind it.
+
+One caveat on `reading`: it carries the known 1–4 ulp deviation of the `Reading`
+evaluator described in [docs/ACCURACY.md](docs/ACCURACY.md). Its 31 269 values
+are checked with a relative tolerance of `1e-12` and an absolute allowance of
+`1e-12` near zero; the other series and times match C# bit for bit.
+
 ### About accuracy
 
 Accuracy is given as a fraction or a percentage — `0.98` and `98` are read
@@ -136,7 +231,7 @@ to ~6% on slider-heavy beatmaps around 95–97%.
 ### Errors
 
 ```python
-from osu_ppsim import BeatmapParseError, UnsupportedModError
+from osu_ppsim import BeatmapParseError, InvalidScoreError, UnsupportedModError
 
 try:
     pp_for_accuracy("map.osu", 0.98, "RX")
@@ -144,10 +239,14 @@ except UnsupportedModError as exc:
     print(exc)   # mod RX is not supported; supported: CL, DC, DT, EZ, FL, HD, HR, HT, NC, NF, NM
 except BeatmapParseError as exc:
     print(exc)   # cannot parse beatmap: ...
+
+# The Simulator from the sections above; its beatmap has 1612 objects.
+sim.score(Score(counts=HitCounts(great=1612, ok=0, meh=0), max_combo=9000))
+# InvalidScoreError: max_combo 9000 exceeds the beatmap's maximum 2359
 ```
 
-Unsupported mods are not silently ignored: quietly returning a wrong number is
-worse than refusing.
+All three are `ValueError` subclasses. Bad input is not silently accommodated:
+quietly returning a wrong number is worse than refusing.
 
 ## Scope
 
@@ -157,8 +256,11 @@ worse than refusing.
 | Score | any: misses, dropped combo, unheld tails and ticks |
 | Scores from stable | with a ScoreV1 total — misses are estimated from it |
 | Mechanics | lazer and stable (the `CL` mod) |
-| Mods | `NM`, `NF`, `DT`, `NC`, `HT`, `DC`, `HR`, `EZ`, `HD`, `FL`, `CL` |
+| Mods | `NM`, `NF`, `DT`, `NC`, `HT`, `DC`, `HR`, `EZ`, `HD`, `FL`, `CL` (fixed rates; no `DA`, no custom speed) |
 | Accuracy | given as a value or as a hit breakdown (see [docs/ACCURACY.md](docs/ACCURACY.md)) |
+| Beatmap input | a path, raw `.osu` bytes, or an already-decoded string |
+| Input validation | counter bounds and necessary combo conditions; `InvalidScoreError` on contradictions (`validate=False` to skip) |
+| Also exposed | per-object difficulty of every skill, for difficulty graphs |
 
 ## Why this, when rosu-pp exists
 
@@ -172,6 +274,15 @@ either:
 `BeatmapDifficultyAttributes` returns neither `reading_difficulty` nor
 `flashlight_difficulty` nor `hit_circle_count`, and current pp cannot be
 reconstructed without them.
+
+That is the whole of the claim, and it is a claim about one release rather than
+about the two libraries. Where rosu-pp is ahead: it covers all four rulesets and
+converts between them, it is roughly 190× faster at difficulty calculation
+(1.3 ms against 250 ms on a 1600-object beatmap), it takes arbitrary mod settings
+such as `DA` and a free clock rate, it computes pp
+incrementally as a play progresses, and it ships wheels on PyPI. Pick this one
+for numbers that match the current rebalance in osu!standard, verified against
+osu!'s own code; pick rosu-pp for breadth and throughput.
 
 ## Accuracy of the calculation
 

@@ -13,9 +13,14 @@
     sim.score(Score(counts=HitCounts(great=1542, ok=65, meh=0, miss=5),
                     max_combo=1800))
 
+Карта берётся с диска по пути либо из байтов — скачанной по HTTP на диск
+попадать не обязательно. Simulator.object_difficulties отдаёт пообъектную
+сложность по каждому скиллу: ряд, из которого строится график сложности карты.
+
 Охват: только osu!standard. Моды — NM, NF, DT, NC, HT, DC, HR, EZ, HD, FL и CL;
 на остальных поднимается UnsupportedModError. Мод CL включает классическую
-(stable) механику подсчёта точности, без него счёт лазерный.
+(stable) механику подсчёта точности, без него счёт лазерный. Противоречия
+в счётчиках скора поднимают InvalidScoreError (score(..., validate=False) отключает).
 """
 
 from __future__ import annotations
@@ -23,25 +28,35 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from .beatmap.decoder import Beatmap, BeatmapParseError, decode_beatmap
+from .beatmap.decoder import (
+    Beatmap,
+    BeatmapParseError,
+    decode_beatmap,
+    decode_beatmap_bytes,
+    decode_beatmap_string,
+)
 from .beatmap.objects import NestedType, Slider
 from .difficulty.calculator import (
     SUPPORTED_DIFFCALC_VERSION,
+    ObjectDifficulties,
     OsuDifficultyAttributes,
     calculate_difficulty,
+    calculate_difficulty_with_strains,
 )
 from .mods import Mods, UnsupportedModError, parse_mods
 from .performance.accuracy import (
     HitCounts,
+    InvalidScoreError,
     Score,
     hit_counts_for_raw_accuracy,
     raw_accuracy_for_display,
     score_accuracy,
+    validate_score,
 )
 from .performance.calculator import OsuPerformanceAttributes, calculate_performance
 
 #: Версия самой библиотеки; версия расчёта osu! — SUPPORTED_DIFFCALC_VERSION.
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
     # Точки входа.
@@ -51,17 +66,23 @@ __all__ = [
     "Result",
     "OsuDifficultyAttributes",
     "OsuPerformanceAttributes",
+    "ObjectDifficulties",
     "HitCounts",
     "Score",
     "Mods",
     # Что поднимается на негодном входе.
     "BeatmapParseError",
     "UnsupportedModError",
+    "InvalidScoreError",
+    "validate_score",
     # Версии и низкоуровневые шаги.
     "SUPPORTED_DIFFCALC_VERSION",
     "__version__",
     "decode_beatmap",
+    "decode_beatmap_bytes",
+    "decode_beatmap_string",
     "calculate_difficulty",
+    "calculate_difficulty_with_strains",
 ]
 
 
@@ -84,6 +105,22 @@ class Result:
         return self.performance.total
 
 
+#: Откуда берётся карта. str и Path — это ПУТЬ к файлу, bytes — само СОДЕРЖИМОЕ
+#: .osu, ещё не декодированное в строку: карта, скачанная по HTTP или добытая из
+#: архива, на диск попадать не обязана. Уже декодированную строку принимает
+#: decode_beatmap_string — угадывать по виду str, путь это или содержимое, было бы
+#: гаданием, а тихо угадать неверно хуже, чем потребовать явности.
+BeatmapSource = str | Path | bytes | bytearray | Beatmap
+
+
+def _load_beatmap(source: BeatmapSource) -> Beatmap:
+    if isinstance(source, Beatmap):
+        return source
+    if isinstance(source, (bytes, bytearray)):
+        return decode_beatmap_bytes(source)
+    return decode_beatmap(source)
+
+
 def _count_large_ticks(beatmap: Beatmap) -> int:
     """Число тиков и реверсов — они входят в accuracy под lazer-механикой."""
     return sum(
@@ -100,15 +137,21 @@ class Simulator:
 
     Difficulty-атрибуты не зависят от accuracy, поэтому считаются один раз:
     около 280 мс на карте в 1600 объектов против 12 мкс на каждый расчёт pp.
+
+    Карта принимается путём (str или Path), содержимым .osu в байтах или уже
+    разобранным Beatmap. Помимо pp наружу отдаётся object_difficulties —
+    пообъектная сложность каждого скилла, ряд для графика сложности.
     """
 
-    def __init__(self, beatmap: str | Path | Beatmap, mods: str | list[str] | Mods | None = None) -> None:
+    def __init__(self, beatmap: BeatmapSource, mods: str | list[str] | Mods | None = None) -> None:
         self.mods = parse_mods(mods)
         # Расчёт меняет Beatmap на месте, поэтому второй Simulator на том же
         # объекте построить нельзя — флаг processed это запретит.
-        self.beatmap = beatmap if isinstance(beatmap, Beatmap) else decode_beatmap(beatmap)
+        self.beatmap = _load_beatmap(beatmap)
 
-        self.difficulty = calculate_difficulty(self.beatmap, self.mods)
+        #: Пообъектная сложность по каждому скиллу — ряд для графика сложности.
+        #: Достаётся даром: скиллы копят её по ходу того же расчёта.
+        self.difficulty, self.object_difficulties = calculate_difficulty_with_strains(self.beatmap, self.mods)
         self._total_objects = len(self.beatmap.hit_objects)
         self._large_ticks = _count_large_ticks(self.beatmap)
 
@@ -155,14 +198,34 @@ class Simulator:
         counts = hit_counts_for_raw_accuracy(self._total_objects, target_raw)
         return self.score(Score(counts=counts), requested_accuracy=accuracy)
 
-    def score(self, score: Score, *, requested_accuracy: float | None = None) -> Result:
+    def score(self, score: Score, *, requested_accuracy: float | None = None, validate: bool = True) -> Result:
         """Считает pp за произвольный скор: с промахами, потерянным комбо,
         недодержанными хвостами и пропущенными тиками.
 
         Значения по умолчанию в `Score` описывают FC, поэтому `pp()` — частный
         случай этого метода, а не отдельная ветка расчёта.
+
+        Проверяются границы счётчиков, сумма попаданий и связь потерь с комбо.
+        None у комбо означает максимум карты, поэтому при потерях нужно задать
+        комбо явно. Противоречие поднимает InvalidScoreError. Проверка не
+        восстанавливает порядок попаданий и не доказывает достижимость скора.
+        validate=False отключает проверку и считает как есть; сам расчёт от
+        флага не зависит ни на бит — так гейты сверяют с оракулом и поведение
+        за пределами разумной области.
         """
         classic = self.mods.classic_slider_accuracy
+        if validate:
+            validate_score(
+                score,
+                total_objects=self._total_objects,
+                beatmap_max_combo=self.difficulty.max_combo,
+                # Границы у карты одни, механика судейства их не меняет: под CL
+                # хвосты и тики не судятся, но их всё равно не больше, чем есть.
+                slider_count=self.difficulty.slider_count,
+                large_tick_count=self._large_ticks,
+                classic_slider_accuracy=classic,
+            )
+
         slider_count = 0 if classic else self.difficulty.slider_count
         large_ticks = 0 if classic else self._large_ticks
 
@@ -194,7 +257,7 @@ class Simulator:
 
 
 def pp_for_accuracy(
-    beatmap: str | Path | Beatmap,
+    beatmap: BeatmapSource,
     accuracy: float,
     mods: str | list[str] | Mods | None = None,
     *,

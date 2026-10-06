@@ -16,7 +16,7 @@ is the one to look at.
 |---|---|---|
 | Phase 1 | `.osu` parsing, slider geometry, stacking, `MaxCombo` | 17 beatmaps |
 | Phase 2 | `OsuDifficultyHitObject` | 562 884 values |
-| Phase 3 | 7 evaluators and 4 skills | 7 mod sets |
+| Phase 3 | 7 evaluators, 4 skills, and the per-object series the public API exposes | 7 mod sets; 160 812 values in the public series, including times |
 | Phase 4 | difficulty attributes and star rating | 70 combinations, 17 attributes |
 | Phase 5 | **pp** | 1140 combinations, deviation `3.798e-16` |
 | Phase 6 | edge cases | 21 beatmaps, 2 of them under `CL` |
@@ -101,6 +101,24 @@ is indistinguishable from a dropped tail by the statistics, but distinguishable
 by the total, because ScoreV1 multiplies every hit by the current combo
 multiplier. The branch fired in 756 of the gate's 1428 scores.
 
+**Impossible inputs are part of the verified surface.** osu-tools clamps
+neither combo nor misses — `misses: 1000` on a 4-object beatmap produces
+negative hit counts, and the oracle computes right through them. The gate's
+matrix deliberately includes such inputs and requires the port to return the
+oracle's garbage bit for bit: those are exactly the runs that exercise the
+clamps inside the pp formula. The phase 7 gate always uses `validate=False`
+so that numerical correspondence is checked independently of input validation:
+every one of its 15 708 compared values matches the oracle.
+
+Validation has its own autonomous gate in `tests/test_public_api.py`: 80 cases
+with explicit acceptance or rejection expectations, checked through both
+`validate_score` and `Simulator.score`. They cover defaults, counter bounds,
+combined combo losses, nested hits with zero combo, empty beatmaps, and both
+scoring mechanics. Accepted scores are also checked for identical results with
+validation enabled and disabled, and for ignored nested fields under `CL`.
+Passing validation establishes the documented necessary conditions; it does
+not reconstruct the order of hits or prove full reachability of the score.
+
 ## Known deviations
 
 **Under `CL` the `raw_accuracy` flag does nothing.** This is not an oversight:
@@ -130,6 +148,17 @@ against the oracle's `1197.3941449623246`, i.e. `3.8e-16`. Star rating still agr
 it. The combination is deliberately included in the phase 5 gate, which is why
 its worst deviation is `3.798e-16` rather than zero: hiding a known deviation
 by dropping a mod set would be worse than keeping it visible under a tolerance.
+
+The same 1–4 ulp deviation reaches `ObjectDifficulties.reading`, the per-object
+series the public API exposes. The phase 3 gate compares all 31 269 reading
+values with `abs(actual - expected) <= 1e-12 * max(abs(expected), 1)` and
+rejects non-finite values or a length mismatch. The other series and times
+are compared exactly: 129 543 values. All 70 expected beatmap-and-mod
+combinations must be checked; a missing fixture fails the gate.
+Anyone plotting a reading graph is
+looking at numbers that are right to about fifteen significant digits rather
+than to the last bit; nothing downstream of a graph can notice, but saying so is
+cheaper than having someone rediscover it.
 
 **Timing sections with out-of-order times.** Grouping of simultaneous points
 reproduces `flushPendingPoints` for consecutive lines — that is, for everything

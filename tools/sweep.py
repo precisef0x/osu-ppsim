@@ -177,7 +177,11 @@ def main() -> int:
                 legacy_combos += 1
 
             try:
-                actual_pp = simulator.score(score).pp
+                # validate=False: генератор рисует комбо и промахи независимо,
+                # и часть сочетаний невозможна (комбо у максимума при трёх
+                # промахах). Оракул такое считает — сверяем и мы. Что валидация
+                # соблюдает границы входа, держит автономный гейт публичного API.
+                actual_pp = simulator.score(score, validate=False).pp
             except Exception:  # noqa: BLE001
                 mismatches.append(
                     {

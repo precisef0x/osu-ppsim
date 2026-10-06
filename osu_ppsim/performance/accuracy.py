@@ -25,7 +25,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Final
 
-__all__ = ["HitCounts", "Score", "hit_counts_for_raw_accuracy", "score_accuracy", "raw_accuracy_for_display"]
+__all__ = [
+    "HitCounts",
+    "Score",
+    "InvalidScoreError",
+    "validate_score",
+    "hit_counts_for_raw_accuracy",
+    "score_accuracy",
+    "raw_accuracy_for_display",
+]
 
 #: Веса в формуле точности lazer.
 _SLIDER_TAIL_WEIGHT: Final[float] = 3.0
@@ -34,7 +42,7 @@ _LARGE_TICK_WEIGHT: Final[float] = 0.6
 
 @dataclass(frozen=True)
 class HitCounts:
-    """Расклад попаданий при FC: промахов нет, комбо максимальное."""
+    """Расклад попаданий по основным объектам карты, включая промахи."""
 
     great: int
     ok: int
@@ -53,8 +61,8 @@ class Score:
     Всё, кроме попаданий, необязательно и по умолчанию описывает FC:
     комбо максимальное, хвосты собраны, тики не потеряны.
 
-    `slider_tail_hits` и `large_tick_misses` существуют только в лазерной
-    механике: под CL их в статистике нет, и они должны остаться нулевыми.
+    `slider_tail_hits` и `large_tick_misses` участвуют только в лазерной
+    механике. Под CL расчёт их игнорирует, но валидация проверяет границы по карте.
     """
 
     counts: HitCounts
@@ -66,6 +74,93 @@ class Score:
     #: Сумма очков ScoreV1. Есть только у скоров из stable; вместе с модом CL
     #: включает оценку промахов по очкам вместо оценки по комбо.
     legacy_total_score: int | None = None
+
+
+class InvalidScoreError(ValueError):
+    """Скор невозможен на этой карте: числа противоречат карте или друг другу."""
+
+
+def validate_score(
+    score: Score,
+    *,
+    total_objects: int,
+    beatmap_max_combo: int,
+    slider_count: int,
+    large_tick_count: int,
+    classic_slider_accuracy: bool = False,
+) -> None:
+    """Проверяет границы счётчиков и необходимые условия согласованности скора.
+
+    Сами Score и HitCounts — просто записи, без контекста карты они проверить
+    ничего не могут (и НЕ проверяют даже отрицательные значения: гейты нарочно
+    собирают мусорные скоры, чтобы сверить с оракулом поведение вне разумной
+    области). Вся проверка собрана здесь и вызывается там, где карта известна, —
+    в Simulator.score().
+
+    None у комбо означает максимум карты, у хвостов — все собранные хвосты;
+    эти значения проверяются наравне с явными. Под classic_slider_accuracy
+    поля хвостов и тиков ограничены картой, но не участвуют в границе комбо.
+
+    Проверка не восстанавливает порядок попаданий и не доказывает достижимость
+    прошедшего скора. Проверяются только неоспоримые противоречия. Порогов вида
+    «столько соток при таком комбо подозрительно» тут нет и не будет: ложный
+    отказ на настоящем скоре хуже, чем пропущенный мусор.
+    """
+    counts = score.counts
+    for name, value in (
+        ("great", counts.great),
+        ("ok", counts.ok),
+        ("meh", counts.meh),
+        ("miss", counts.miss),
+        ("max_combo", score.max_combo),
+        ("slider_tail_hits", score.slider_tail_hits),
+        ("large_tick_misses", score.large_tick_misses),
+        ("legacy_total_score", score.legacy_total_score),
+    ):
+        if value is not None and value < 0:
+            raise InvalidScoreError(f"negative {name}: {value}")
+
+    if counts.total != total_objects:
+        raise InvalidScoreError(
+            f"hit counts cover {counts.total} objects, but the beatmap has {total_objects}"
+        )
+
+    if score.slider_tail_hits is not None and score.slider_tail_hits > slider_count:
+        raise InvalidScoreError(
+            f"slider_tail_hits {score.slider_tail_hits} exceeds the beatmap's {slider_count} sliders"
+        )
+
+    if score.large_tick_misses > large_tick_count:
+        raise InvalidScoreError(
+            f"large_tick_misses {score.large_tick_misses} exceeds "
+            f"the beatmap's {large_tick_count} ticks and repeats"
+        )
+
+    # Значения по умолчанию проверяются в том же смысле, в котором их
+    # использует расчёт: None — максимум карты и все собранные хвосты.
+    max_combo = beatmap_max_combo if score.max_combo is None else score.max_combo
+    tail_hits = slider_count if score.slider_tail_hits is None else score.slider_tail_hits
+    if max_combo > beatmap_max_combo:
+        raise InvalidScoreError(
+            f"max_combo {max_combo} exceeds the beatmap's maximum {beatmap_max_combo}"
+        )
+
+    # Каждая потеря убирает хотя бы одну единицу комбо. Это верхняя граница,
+    # а не восстановление достигнутого комбо: порядок попаданий неизвестен.
+    lost_combo = counts.miss
+    anything_hit = counts.total > counts.miss
+    if not classic_slider_accuracy:
+        lost_combo += score.large_tick_misses + slider_count - tail_hits
+        anything_hit = anything_hit or tail_hits > 0 or large_tick_count > score.large_tick_misses
+
+    combo_limit = beatmap_max_combo - lost_combo
+    if max_combo > combo_limit:
+        raise InvalidScoreError(
+            f"max_combo {max_combo} is impossible with these losses: "
+            f"at most {combo_limit} combo units remain"
+        )
+    if max_combo == 0 and anything_hit:
+        raise InvalidScoreError("max_combo 0 is impossible when anything was hit: the first hit makes it 1")
 
 
 def hit_counts_for_raw_accuracy(total_objects: int, raw_accuracy: float) -> HitCounts:

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "osu-ppsim"
-version = "0.3.0"
+version = "0.4.0"
 description = "Расчёт pp для карты osu!standard: за FC на заданной accuracy либо за произвольный скор"
 readme = "README.md"
 requires-python = ">=3.11"
